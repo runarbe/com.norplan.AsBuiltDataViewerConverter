@@ -1,0 +1,524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CEBBAFBF-0A47-47EC-8730-C1518A140AE7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AsBuiltToGIS</RootNamespace>
+    <AssemblyName>AsBuiltToGIS</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>As-Built Data Browser</ProductName>
+    <SuiteName>Abu Dhabi Addressing System</SuiteName>
+    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>4ED65E0879BE709E6723B22D93E50C41105256BE</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>AsBuiltToGIS_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BruTile">
+      <HintPath>..\packages\DotSpatial.Controls.BruTileLayer\bin\Release\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Analysis">
+      <HintPath>..\packages\DotSpatial.Analysis.1.7\lib\net40-Client\DotSpatial.Analysis.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Controls">
+      <HintPath>..\packages\DotSpatial.Controls.1.7\lib\net40-Client\DotSpatial.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Controls.BruTileLayer">
+      <HintPath>..\packages\DotSpatial.Controls.BruTileLayer\bin\Release\DotSpatial.Controls.BruTileLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Data">
+      <HintPath>..\packages\DotSpatial.Data.1.7\lib\net40-Client\DotSpatial.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Data.Forms">
+      <HintPath>..\packages\DotSpatial.Data.Forms.1.7\lib\net40-Client\DotSpatial.Data.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Extensions">
+      <HintPath>..\packages\DotSpatial.Extensions.1.7\lib\net40-Client\DotSpatial.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Modeling.Forms">
+      <HintPath>..\packages\DotSpatial.Modeling.Forms.1.7\lib\net40-Client\DotSpatial.Modeling.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Mono">
+      <HintPath>..\packages\DotSpatial.Mono.1.7\lib\net40-Client\DotSpatial.Mono.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Plugins.FindFeature">
+      <HintPath>..\packages\DotSpatial.Plugins.FindFeature.1.0.1185\lib\net40-Client\DotSpatial.Plugins.FindFeature.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Plugins.Measure">
+      <HintPath>..\packages\DotSpatial.Plugins.Measure.1.0.1185\lib\net40-Client\DotSpatial.Plugins.Measure.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Plugins.MenuBar">
+      <HintPath>..\packages\DotSpatial.Plugins.MenuBar.1.0.1195\lib\net40-Client\DotSpatial.Plugins.MenuBar.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Plugins.TableEditor">
+      <HintPath>..\packages\DotSpatial.Plugins.TableEditor.1.0.1185\lib\net40-Client\DotSpatial.Plugins.TableEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Positioning">
+      <HintPath>..\packages\DotSpatial.Positioning.1.7\lib\net40-Client\DotSpatial.Positioning.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Positioning.Forms">
+      <HintPath>..\packages\DotSpatial.Positioning.Forms.1.7\lib\net40-Client\DotSpatial.Positioning.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections">
+      <HintPath>..\packages\DotSpatial.Projections.1.7\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections.Forms">
+      <HintPath>..\packages\DotSpatial.Projections.Forms.1.7\lib\net40-Client\DotSpatial.Projections.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Serialization">
+      <HintPath>..\packages\DotSpatial.Serialization.1.7\lib\net40-Client\DotSpatial.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology">
+      <HintPath>..\packages\DotSpatial.Symbology.1.7\lib\net40-Client\DotSpatial.Symbology.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology.Forms">
+      <HintPath>..\packages\DotSpatial.Symbology.Forms.1.7\lib\net40-Client\DotSpatial.Symbology.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Topology">
+      <HintPath>..\packages\DotSpatial.Topology.1.7\lib\net40-Client\DotSpatial.Topology.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="gdalconst_csharp, Version=1.0.5121.13209, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\release-1600-gdal-mapserver\bin\gdal\csharp\gdalconst_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gdal_csharp, Version=1.0.5121.13209, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\release-1600-gdal-mapserver\bin\gdal\csharp\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ogr_csharp, Version=1.0.5121.13209, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\release-1600-gdal-mapserver\bin\gdal\csharp\ogr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="osr_csharp, Version=1.0.5121.13208, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\release-1600-gdal-mapserver\bin\gdal\csharp\osr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.97.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.97.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.97.0\lib\net40\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.97.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="zxing, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ZXing.Net.0.14.0.0\net4.0\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ZXing.Net.0.14.0.0\net4.0\zxing.presentation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTypes\GeoObjects.cs" />
+    <Compile Include="DataTypes\CbVal.cs" />
+    <Compile Include="DataTypes\ReturnValue.cs" />
+    <Compile Include="FeatureTypes\District.cs" />
+    <Compile Include="FeatureTypes\MyAbuDhabiDotNetRecord.cs" />
+    <Compile Include="FeatureTypes\SimplifiedRoad.cs" />
+    <Compile Include="Forms\frmMySQLConnection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMySQLConnection.Designer.cs">
+      <DependentUpon>frmMySQLConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmQrCodeGen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmQrCodeGen.Designer.cs">
+      <DependentUpon>frmQrCodeGen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\ExtFunctions.CleanFileGDBNames.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportToMyAbuDhabiNet.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportFeatureLayerToMySQL.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportFeatureLayerToSQLITE.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportGeopaparazziDB.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportFeatureLayerToOGR.cs" />
+    <Compile Include="DataTypes\AddressUnit.cs" />
+    <Compile Include="DataTypes\Field.cs" />
+    <Compile Include="FeatureTypes\AddressUnitFeature.cs" />
+    <Compile Include="FeatureTypes\AddressGuideSignFeature.cs" />
+    <Compile Include="FeatureTypes\AdmAdrFeature.cs" />
+    <Compile Include="FeatureTypes\MapSymbols.cs" />
+    <Compile Include="FeatureTypes\StreetNameSignFeature.cs" />
+    <Compile Include="Forms\frmAboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmAboutBox.Designer.cs">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLayout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLayout.Designer.cs">
+      <DependentUpon>frmLayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmInputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmInputBox.Designer.cs">
+      <DependentUpon>frmInputBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Functions\LayerNames.cs" />
+    <Compile Include="Functions\MySqlLib.cs" />
+    <Compile Include="Functions\OgrExt.cs" />
+    <Compile Include="Functions\SLib.cs" />
+    <Compile Include="Functions\StringExt.cs" />
+    <Compile Include="GdalConfiguration.cs" />
+    <Compile Include="Functions\Database.cs" />
+    <Compile Include="Functions\ExtFunctions.cs" />
+    <Compile Include="Functions\LayoutFunctions.cs" />
+    <Compile Include="Functions\FeatureSetToGML.cs" />
+    <Compile Include="Functions\FeatureSetToOGR.cs" />
+    <Compile Include="Functions\GoogleMapsColors.cs" />
+    <Compile Include="Functions\retval.cs" />
+    <Compile Include="Functions\sqlStatements.cs" />
+    <Compile Include="Functions\SymbologyFunctions.cs" />
+    <Compile Include="Functions\Utilities.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="credits.txt" />
+    <Content Include="Resources\Altimeter.bmp" />
+    <Content Include="Resources\Clock.bmp" />
+    <Content Include="Resources\Compass.bmp" />
+    <Content Include="Resources\cursor_arrow_16x16.png" />
+    <Content Include="Resources\cursor_arrow_32x32.png" />
+    <Content Include="Resources\deselect_16x16.png" />
+    <Content Include="Resources\deselect_32x32.png" />
+    <Content Include="Resources\disk_16x16.png" />
+    <Content Include="Resources\disk_32x32.png" />
+    <Content Include="Resources\document_empty_16x16.png" />
+    <Content Include="Resources\document_empty_32x32.png" />
+    <Content Include="Resources\folder_16x16.png" />
+    <Content Include="Resources\folder_32x32.png" />
+    <Content Include="Resources\info_rhombus_16x16.png" />
+    <Content Include="Resources\info_rhombus_32x32.png" />
+    <Content Include="Resources\layer_add_16x16.png" />
+    <Content Include="Resources\layer_add_32x32.png" />
+    <Content Include="Resources\layer_remove_16x16.png" />
+    <Content Include="Resources\layer_remove_32x32.png" />
+    <Content Include="Resources\layer_save_16x16.png" />
+    <Content Include="Resources\layer_save_32x32.png" />
+    <Content Include="Resources\measure_16x16.png" />
+    <Content Include="Resources\measure_32x32.png" />
+    <Content Include="Resources\printer_16x16.png" />
+    <Content Include="Resources\printer_32x32.png" />
+    <Content Include="Resources\SatelliteSignalBar.bmp" />
+    <Content Include="Resources\SatelliteViewer.bmp" />
+    <Content Include="Resources\save_as_16x16.png" />
+    <Content Include="Resources\save_as_32x32.png" />
+    <Content Include="Resources\select_16x16.png" />
+    <Content Include="Resources\select_32x32.png" />
+    <Content Include="Resources\Speedometer.bmp" />
+    <Content Include="Resources\table_16x16.png" />
+    <Content Include="Resources\table_32x32.png" />
+    <Content Include="Resources\zoom_16x16.png" />
+    <Content Include="Resources\zoom_32x32.png" />
+    <Content Include="Resources\zoom_coordinate_16x16.png" />
+    <Content Include="Resources\zoom_coordinate_32x32.png" />
+    <Content Include="Resources\zoom_extend_16x16.png" />
+    <Content Include="Resources\zoom_extend_32x32.png" />
+    <Content Include="Resources\zoom_in_16x16.png" />
+    <Content Include="Resources\zoom_in_32x32.png" />
+    <Content Include="Resources\zoom_layer_16x16.png" />
+    <Content Include="Resources\zoom_layer_32x32.png" />
+    <Content Include="Resources\zoom_out_16x16.png" />
+    <Content Include="Resources\zoom_out_32x32.png" />
+    <Content Include="Resources\zoom_selection_16x16.png" />
+    <Content Include="Resources\zoom_selection_32x32.png" />
+    <Content Include="Resources\zoom_to_next.png" />
+    <Content Include="Resources\zoom_to_next_16.png" />
+    <Content Include="Resources\zoom_to_previous.png" />
+    <Content Include="Resources\zoom_to_previous_16.png" />
+    <Content Include="Templates\geopaparazzi\media\empty.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\geopaparazzi\tags.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Forms\frmAboutBox.resx">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLayout.resx">
+      <DependentUpon>frmLayout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmInputBox.resx">
+      <DependentUpon>frmInputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMySQLConnection.resx">
+      <DependentUpon>frmMySQLConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmQrCodeGen.resx">
+      <DependentUpon>frmQrCodeGen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Content Include="GisData\land.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\land.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\land.sbn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\land.sbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\land.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\land.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config" />
+    <None Include="AsBuiltToGIS_TemporaryKey.pfx" />
+    <Content Include="GisData\roadssub.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\roadssub.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\roadssub.sbn">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\roadssub.sbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\roadssub.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\roadssub.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Functions\ExtFunctions.AddPlotIDsToAddressDB.cs" />
+    <Compile Include="Functions\ExtFunctions.ExportFileGDBToMyAbuDhabiDotNetSQL.cs" />
+    <Content Include="GisData\districts.dbf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\districts.prj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\districts.shp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GisData\districts.shx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="Templates\geopaparazzi\geopaparazzi.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\geopaparazzi\geopaparazzi.db-journal">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GisData\land.shp.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensibility\" />
+    <Folder Include="Temp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\norplan.adm.qrlib\norplan.adm.qrlib\norplan.adm.qrlib.csproj">
+      <Project>{5075f8e8-59f9-4aae-8364-6806abdc399e}</Project>
+      <Name>norplan.adm.qrlib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
+
+    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\*.*" "$(TargetDir)gdal" /exclude:$(SolutionDir)excludedFiles.txt
+
+    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\gdal\csharp\*.*" "$(TargetDir)gdal" /exclude:$(SolutionDir)excludedFiles.txt
+
+    xcopy /s /y "$(SolutionDir)packages\gdal-110-1600-filegdb\*.*" "$(TargetDir)gdal\gdal\plugins-external"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.97.0\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

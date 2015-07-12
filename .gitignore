@@ -1,0 +1,7 @@
+AsBuiltToGIS/bin/
+AsBuiltToGIS/obj/Debug/AsBuiltToGIS.csproj.FileListAbsolute.txt
+AsBuiltToGIS/obj
+packages/
+Installer/Output/
+deprecated/
+.nuget/
