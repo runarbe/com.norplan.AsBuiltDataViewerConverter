@@ -264,9 +264,13 @@ namespace AsBuiltToGIS.Functions
         /// Returns an OGR SpatialReference object for the specified EPSG Code
         /// </summary>
         /// <param name="pEPSGCode">EPSG code</param>
-        /// <returns>OGR SpatialReference object</returns>
+        /// <returns>OGR SpatialReference object - if EPSG code is invalidm\</returns>
         public static SpatialReference GetSpatialReferenceByEPSG(int pEPSGCode)
         {
+            if (pEPSGCode == 0)
+            {
+                pEPSGCode = 4326;
+            }
             SpatialReference mSR = new SpatialReference(null);
             mSR.ImportFromEPSG(pEPSGCode);
             return mSR;
@@ -279,8 +283,13 @@ namespace AsBuiltToGIS.Functions
         /// <returns>DotSpatial ProjectionInfo object</returns>
         public static ProjectionInfo GetProjByEPSG(int pEPSGCode)
         {
+            if (pEPSGCode == 0)
+            {
+                pEPSGCode = 4326;
+            }
             var mProjInfo = ProjectionInfo.FromEpsgCode(pEPSGCode);
-            mProjInfo.EpsgCode = pEPSGCode;
+            mProjInfo.Authority = "EPSG";
+            mProjInfo.AuthorityCode = pEPSGCode;
             return mProjInfo;
         }
 
@@ -1017,7 +1026,7 @@ namespace AsBuiltToGIS.Functions
                 while (null != (mFeature = mLayer.GetNextFeature()))
                 {
                     OSGeo.OGR.Geometry mGeom = mFeature.GetGeometryRef();
-                    
+
                     if (mGeom != null)
                     {
                         string wkt;
@@ -1059,7 +1068,7 @@ namespace AsBuiltToGIS.Functions
                 var mA = mRight - mLeft;
                 var mB = mTop - mBottom;
                 var mC = Math.Sqrt(mA * mA + mB * mB);
-                if (mLength > (2.2 * mC) || mDuplicates > 0 )
+                if (mLength > (2.2 * mC) || mDuplicates > 0)
                 {
                     aLog(String.Format("r: {0}, s: {1}, l: {2}, d: {3}, bb: {4}",
                         mRoadID.Key,
