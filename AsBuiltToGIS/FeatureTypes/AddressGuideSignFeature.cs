@@ -12,21 +12,23 @@ namespace AsBuiltToGIS.FeatureTypes
 {
     class AddressGuideSignFeature : AdmAdrFeature
     {
-        public AddressGuideSignFeature()
-        {
-            // Set feature type
-            this.FeatureType = DotSpatial.Topology.FeatureType.Point;
-            this.DataTable.Columns.Add(new DataColumn("SIGNTYPE", typeof(string)));
-            this.DataTable.Columns.Add(new DataColumn("SERIALNUMBEROFSIGN", typeof(string)));
-            this.DataTable.Columns.Add(new DataColumn("DISTRICT", typeof(string)));
-            this.DataTable.Columns.Add(new DataColumn("QR_CODE", typeof(string)));
-        }
-
-
-        public FeatureSet PopulateFromTable(Database pDbx)
+        public AddressGuideSignFeature(Database pDbx)
         {
             this.dbx = pDbx;
 
+            // Set feature type
+            this.FeatureType = DotSpatial.Topology.FeatureType.Point;
+            AddCol("ADDRESSGUIDESIGNID", typeof(int));
+            AddCol("QR_CODE", typeof(string));
+            AddCol("SIGNTYPE", typeof(string));
+            AddCol("AUNRANGE", typeof(string));
+            AddCol("ROADID", typeof(int));
+            AddCol("DISTRICTID", typeof(string));
+        }
+
+
+        public FeatureSet PopulateFromTable()
+        {
             DataTable pTable = this.GetTable(sqlStatements.selectAddressGuideSignsSQL);
 
             foreach (DataRow mRow in pTable.Rows)
@@ -39,10 +41,12 @@ namespace AsBuiltToGIS.FeatureTypes
 
                     mFeature.DataRow.BeginEdit();
 
-                    mFeature.DataRow["SIGNTYPE"] = mRow["signType"];
-                    mFeature.DataRow["SERIALNUMBEROFSIGN"] = mRow["serialNumberOfSign"];
-                    mFeature.DataRow["DISTRICT"] = mRow["district_id"];
+                    mFeature.DataRow["ADDRESSGUIDESIGNID"] = mRow["id"];
                     mFeature.DataRow["QR_CODE"] = this.GetQRCode(mRow, pTable);
+                    mFeature.DataRow["SIGNTYPE"] = mRow["signType"];
+                    mFeature.DataRow["AUNRANGE"] = mRow["serialNumberOfSign"];
+                    mFeature.DataRow["ROADID"] = mRow["road_id"];
+                    mFeature.DataRow["DISTRICTID"] = mRow["district_id"];
                     mFeature.DataRow.EndEdit();
                 }
             }

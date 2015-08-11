@@ -58,12 +58,10 @@ namespace AsBuiltToGIS.FeatureTypes
                 if (mXY != null)
                 {
                     var mPoint = new DotSpatial.Topology.Point(mXY[0], mXY[1]);
-
                     var mFeature = this.AddFeature(mPoint);
-
                     mFeature.DataRow.BeginEdit();
 
-                    mFeature.DataRow["ADDRESSUNITID"] = mRow["addressUnitNumber"].ToString();
+                    mFeature.DataRow["ADDRESSUNITID"] = mRow["id"];
                     mFeature.DataRow["ROADID"] = mRow["road_id"].ToString();
                     mFeature.DataRow["ADDRESSUNITNR"] = mRow["addressUnitNumber"].ToString();
                     mFeature.DataRow["ROADNAME_EN"] = mRow["NAMEENGLISH"].ToString();
@@ -79,9 +77,7 @@ namespace AsBuiltToGIS.FeatureTypes
                     mFeature.DataRow.EndEdit();
                 }
             }
-
             return this;
-
         }
     }
 

@@ -12,23 +12,25 @@ namespace AsBuiltToGIS.FeatureTypes
 {
     class StreetNameSignFeature : AdmAdrFeature
     {
-        public StreetNameSignFeature()
-        {
-            // Set feature type
-            FeatureType = DotSpatial.Topology.FeatureType.Point;
-            AddCol("SIGNTYPE", typeof(String));
-            AddCol("SERIALNUMBEROFSIGN", typeof(string));
-            AddCol("DISTRICT_P1", typeof(string));
-            AddCol("STREETNAME_P1", typeof(string));
-            AddCol("DISTRICT_P2", typeof(string));
-            AddCol("STREETNAME_P2", typeof(string));
-            AddCol("QR_CODE", typeof(string));
-        }
-
-        public FeatureSet PopulateFromTable(Database pDbx)
+        public StreetNameSignFeature(Database pDbx)
         {
             this.dbx = pDbx;
 
+            // Set feature type
+            FeatureType = DotSpatial.Topology.FeatureType.Point;
+            AddCol("STREETNAMESIGNID", typeof(int));
+            AddCol("QR_CODE", typeof(string));
+            AddCol("SIGNTYPE", typeof(string));
+            AddCol("AUNRANGE_P1", typeof(string));
+            AddCol("ROADID_P1", typeof(int));
+            AddCol("DISTRICTID_P1", typeof(string));
+            AddCol("AUNRANGE_P2", typeof(string));
+            AddCol("ROADID_P2", typeof(int));
+            AddCol("DISTRICTID_P2", typeof(string));
+        }
+
+        public FeatureSet PopulateFromTable()
+        {
             DataTable pTable = this.GetTable(sqlStatements.selectStreetNameSignsSQL);
 
             foreach (DataRow mRow in pTable.Rows)
@@ -43,12 +45,15 @@ namespace AsBuiltToGIS.FeatureTypes
 
                     mF.BeginEdit();
 
-                    mF["SIGNTYPE"] = mRow["signType"];
-                    mF["SERIALNUMBEROFSIGN"] = mRow["serialNumberOfSign"];
-                    mF["DISTRICT_P1"] = mRow["district_id_p1"];
-                    mF["STREETNAME_p1"] = mRow["STREETNAME_EN"];
+                    mF["STREETNAMESIGNID"] = mRow["id"];
                     mF["QR_CODE"] = this.GetQRCode(mRow, pTable);
-                    
+                    mF["SIGNTYPE"] = mRow["signType"];
+                    mF["AUNRANGE_P1"] = mRow["addressUnitRange_p1"];
+                    mF["ROADID_P1"] = mRow["road_id_p1"];
+                    mF["DISTRICTID_P1"] = mRow["district_id_p1"];
+                    mF["AUNRANGE_P2"] = mRow["addressUnitRange_p2"];
+                    mF["ROADID_P2"] = mRow["road_id_p2"];
+                    mF["DISTRICTID_P2"] = mRow["district_id_p2"];
                     mF.EndEdit();
                 }
 

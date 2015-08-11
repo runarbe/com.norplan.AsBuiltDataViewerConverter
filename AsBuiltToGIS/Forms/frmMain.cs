@@ -114,7 +114,19 @@ namespace AsBuiltToGIS
         private void frmMain_Load(object sender, EventArgs e)
         {
             // Add base layers
+            theMap.BackColor = Color.LightBlue;
             ExtFunctions.AddBaseLayers(theMap);
+            CheckIfPlotFileImported();
+            Log("Application ready...");
+        }
+
+        private void CheckIfPlotFileImported()
+        {
+            if (File.Exists(PlotImport.GetShapefileName()))
+            {
+                Properties.Settings.Default.PlotImportFilePresent = true;
+                Properties.Settings.Default.PlotImportFileDate = new FileInfo(PlotImport.GetShapefileName()).LastWriteTime;
+            }
         }
 
         #endregion;
@@ -134,6 +146,7 @@ namespace AsBuiltToGIS
                 {
                     //ExtFunctions.UpdateDataTable(
                     this.UpdateDataTable((IFeatureSet)e.Layer.DataSet);
+                    tcTableLog.SelectedTab = TableTab;
                 }
             }
 
@@ -161,6 +174,7 @@ namespace AsBuiltToGIS
                 this.tbLog.Lines = this.tbLog.Lines.GetLastN(50);
             }
             this.tbLog.AppendText(pMsg.ToString() + Environment.NewLine);
+            tcTableLog.SelectedTab = LogTab;
             if (pDoEvents)
             {
                 Application.DoEvents();
@@ -639,6 +653,7 @@ namespace AsBuiltToGIS
         {
             // Add select dialog here...
             dlgOpenMdbFile.Filter = "Addressing Database|adm-adr.mdb";
+            dlgOpenMdbFile.FileName = "*.mdb";
             if (dlgOpenMdbFile.ShowDialog() == DialogResult.OK)
             {
                 var mRoadsFeatureSet = ExtFunctions.GetRoadFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 1);
@@ -768,13 +783,14 @@ namespace AsBuiltToGIS
             dlgSelectFolder.Description = "Please select Onwani FileGDB (created by this tool)";
             if (dlgSelectFolder.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             var mOnwaniFileGDB = dlgSelectFolder.SelectedPath;
-            //var mOnwaniFileGDB = "C:/Users/runarbe/Desktop/OnwaniFGDB.gdb";
-            dlgOpenShapefile.Title = "Please select plot shapefile with fields ZONETPSSNA, SECTORTPSS, PLOTNUMBER";
-            dlgOpenShapefile.Filter = "ESRI Shapefile|*.shp";
-            dlgOpenShapefile.FileName = "plot.shp";
-            if (dlgOpenShapefile.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-            var mPlotShapefile = dlgOpenShapefile.FileName;
-            //var mPlotShapefile = "D:/My Documents/My Map Data/Abu Dhabi Addressing/Plots2015/plots2015-2.shp";
+
+            var mPlotShapefile = PlotImport.GetShapefileName();
+
+            if (!File.Exists(mPlotShapefile))
+            {
+                Log("No plot file loaded, please import one using the 'Import zone, sector, plot' command");
+                return;
+            }
 
             Dictionary<string, string> mFldsToCopy = new Dictionary<string, string>() {
                 {"ZONETPSSNA", "ZONETPSS"},
@@ -783,6 +799,7 @@ namespace AsBuiltToGIS
             };
 
             double[] mBufferSteps = new double[] { 0, 0.1, 0.25, 0.5, 0.75, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
             string mFeatClassName = "Address_unit_signs";
 
             Log("Adding zone, sector and plot to address unit signs");
@@ -796,7 +813,6 @@ namespace AsBuiltToGIS
             dlgSelectFolder.Description = "Please select Onwani FileGDB to clean (previously created with this tool)";
             if (dlgSelectFolder.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             var mTgtFileGDB = dlgSelectFolder.SelectedPath;
-            //var mTgtFileGDB = "C:/Users/runarbe/Desktop/OnwaniFGDB.gdb";
 
             dlgOpenMdbFile.Title = "Please select latest 'adm-adr.mdb' PGeoDB";
             dlgOpenMdbFile.Filter = "ESRI Personal Geodatabase|*.mdb";
@@ -858,9 +874,17 @@ namespace AsBuiltToGIS
         {
             // Add select dialog here...
             dlgOpenMdbFile.Filter = "Addressing Database|adm-adr.mdb";
+            dlgOpenMdbFile.FileName = "*.mdb";
             if (dlgOpenMdbFile.ShowDialog() == DialogResult.OK)
             {
-                ExtFunctions.AnalyzeRoadBoundingBoxes(dlgOpenMdbFile.FileName, Log);
+                dlgSaveFile.Title = "Select log file location";
+                dlgSaveFile.InitialDirectory = Path.GetDirectoryName(dlgOpenMdbFile.FileName);
+                dlgSaveFile.FileName = Path.GetFileNameWithoutExtension(dlgOpenMdbFile.FileName) + "-log.xlsx";
+                dlgSaveFile.Filter = "Excel log files|*-log.xlsx";
+                if (dlgSaveFile.ShowDialog() == DialogResult.OK)
+                {
+                    ExtFunctions.AnalyzeRoadBoundingBoxes(dlgOpenMdbFile.FileName, dlgSaveFile.FileName, Log);
+                }
             }
         }
 
@@ -915,6 +939,15 @@ namespace AsBuiltToGIS
             }
         }
 
+        private void importZoneSectorAndPlotsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var mFrm = new frmPlotImport(Log);
+            mFrm.ShowDialog();
+        }
 
+        private void theMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }

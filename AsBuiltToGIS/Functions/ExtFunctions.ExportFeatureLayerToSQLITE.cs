@@ -19,7 +19,7 @@ namespace AsBuiltToGIS.Functions
             var mRV = new ReturnValue(true);
 
             var mReturnValue = new ReturnValue();
-            var mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProj.EpsgCode);
+            var mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProj.AuthorityCode);
 
             bool mTransformationRequired = pSrcProj != pTgtProj ? true : false;
 

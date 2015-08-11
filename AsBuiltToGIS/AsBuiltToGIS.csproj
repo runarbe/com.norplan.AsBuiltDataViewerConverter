@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,27 +31,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -85,29 +66,24 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile">
+    <Reference Include="BruTile, Version=0.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotSpatial.Controls.BruTileLayer\bin\Release\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\ClosedXML.0.76.0\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.11.1.1\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper.Excel">
+      <HintPath>..\packages\CsvHelper.Excel.1.0.5\lib\net40-client\CsvHelper.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="DotSpatial.Analysis">
       <HintPath>..\packages\DotSpatial.Analysis.1.7\lib\net40-Client\DotSpatial.Analysis.dll</HintPath>
@@ -218,20 +194,28 @@
     <Reference Include="System.Xml" />
     <Reference Include="zxing, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ZXing.Net.0.14.0.0\net4.0\zxing.dll</HintPath>
+      <HintPath>..\packages\ZXing.Net.0.14.0.1\lib\net40\zxing.dll</HintPath>
     </Reference>
     <Reference Include="zxing.presentation, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ZXing.Net.0.14.0.0\net4.0\zxing.presentation.dll</HintPath>
+      <HintPath>..\packages\ZXing.Net.0.14.0.1\lib\net40\zxing.presentation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\GeoObjects.cs" />
     <Compile Include="DataTypes\CbVal.cs" />
     <Compile Include="DataTypes\ReturnValue.cs" />
+    <Compile Include="FeatureTypes\PlotImport.cs" />
     <Compile Include="FeatureTypes\District.cs" />
     <Compile Include="FeatureTypes\MyAbuDhabiDotNetRecord.cs" />
+    <Compile Include="FeatureTypes\RoadSuspect.cs" />
     <Compile Include="FeatureTypes\SimplifiedRoad.cs" />
+    <Compile Include="Forms\frmPlotImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmPlotImport.Designer.cs">
+      <DependentUpon>frmPlotImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmMySQLConnection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -299,7 +283,9 @@
     <Compile Include="Functions\Utilities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="credits.txt" />
+    <Content Include="oci.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Altimeter.bmp" />
     <Content Include="Resources\Clock.bmp" />
     <Content Include="Resources\Compass.bmp" />
@@ -360,6 +346,9 @@
     </Content>
     <EmbeddedResource Include="Forms\frmAboutBox.resx">
       <DependentUpon>frmAboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmPlotImport.resx">
+      <DependentUpon>frmPlotImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmLayout.resx">
       <DependentUpon>frmLayout.cs</DependentUpon>
@@ -492,13 +481,17 @@
       <Name>norplan.adm.qrlib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)gdal" md "$(TargetDir)gdal"
 
-    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\*.*" "$(TargetDir)gdal" /exclude:$(SolutionDir)excludedFiles.txt
+    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\*.*" "$(TargetDir)gdal"
 
-    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\gdal\csharp\*.*" "$(TargetDir)gdal" /exclude:$(SolutionDir)excludedFiles.txt
+    xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\gdal\csharp\*.*" "$(TargetDir)gdal"
 
     xcopy /s /y "$(SolutionDir)packages\gdal-110-1600-filegdb\*.*" "$(TargetDir)gdal\gdal\plugins-external"</PostBuildEvent>
   </PropertyGroup>

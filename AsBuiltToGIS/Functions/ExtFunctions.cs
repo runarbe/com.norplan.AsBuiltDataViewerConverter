@@ -11,14 +11,14 @@ using DotSpatial.Data;
 using DotSpatial.Projections;
 using DotSpatial.Symbology;
 using OSGeo.OGR;
-using BruTile.Cache;
-using BruTile.Web;
 using System.Data.Odbc;
 using System.Diagnostics;
 using DotSpatial.Topology.Utilities;
 using DotSpatial.Topology;
 using System.Globalization;
 using OSGeo.OSR;
+using System.IO;
+using CsvHelper.Excel;
 
 namespace AsBuiltToGIS.Functions
 {
@@ -159,7 +159,10 @@ namespace AsBuiltToGIS.Functions
                 FontSize = pFontSize,
                 Orientation = ContentAlignment.MiddleRight,
                 PartsLabelingMethod = PartLabelingMethod.LabelLargestPart,
-                OffsetX = 5
+                OffsetX = 5,
+                FontStyle = System.Drawing.FontStyle.Bold,
+                HaloColor = Color.Black,
+                HaloEnabled = true,
             };
         }
 
@@ -204,15 +207,15 @@ namespace AsBuiltToGIS.Functions
                 mAddressUnitFeatures.PopulateFromTable();
                 var mAddressUnitLayer = ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressUnitFeatures, LayerNames.AddressUnitSigns, MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3), pProjection);
                 mAddressUnitLayer.Reproject(pMap.Projection);
-                ExtFunctions.AddLabelsForFeatureLayer(mAddressUnitLayer, LayerNames.AddressUnitSigns, "[ADDRESSUNITNR] ([ROADID])", SignColors.AddressUnitSign, "Arial", 6, true);
+                ExtFunctions.AddLabelsForFeatureLayer(mAddressUnitLayer, LayerNames.AddressUnitSigns, "[ADDRESSUNITNR] ([ROADID])", Color.White, "Arial", 10, true);
 
-                var mStreetNameSignFeatures = new StreetNameSignFeature();
-                mStreetNameSignFeatures.PopulateFromTable(frmMain.dbx);
+                var mStreetNameSignFeatures = new StreetNameSignFeature(frmMain.dbx);
+                mStreetNameSignFeatures.PopulateFromTable();
                 var mStreetSignLayer = ExtFunctions.GetFeatureLayer(mGroup.Layers, mStreetNameSignFeatures, LayerNames.StreetNameSigns, MapSymbols.PointSymbol(SignColors.StreetNameSign, 6), pProjection);
                 mStreetSignLayer.Reproject(pMap.Projection);
 
-                var mAddressGuideSignFeatures = new AddressGuideSignFeature();
-                mAddressGuideSignFeatures.PopulateFromTable(frmMain.dbx);
+                var mAddressGuideSignFeatures = new AddressGuideSignFeature(frmMain.dbx);
+                mAddressGuideSignFeatures.PopulateFromTable();
                 var mAddressGuideSignLayer = ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressGuideSignFeatures, LayerNames.AddressGuideSigns, MapSymbols.PointSymbol(SignColors.AddressGuideSign, 4), pProjection);
                 mAddressGuideSignLayer.Reproject(pMap.Projection);
                 pMap.Layers.Add(mGroup);
@@ -242,20 +245,36 @@ namespace AsBuiltToGIS.Functions
             if (pFrm.satellite == null)
             {
                 pFrm.satellite = BruTileLayer.CreateBingAerialLayer();
+                pFrm.satellite.LegendText = "Bing (Satellite)";
             }
 
-            if (pFrm.theMap.Layers.Contains(pFrm.satellite))
+            ILayer mLandLayer = null;
+
+            foreach (var mGroup in pFrm.theMap.GetAllLayers())
+            {
+                if (mGroup.LegendText == "Abu Dhabi Emirate")
+                {
+                    mLandLayer = mGroup;
+                    break;
+                }
+            }
+
+            if (pFrm.theMap.Layers.Contains(pFrm.satellite) || pRemove)
             {
                 pFrm.theMap.Layers.Remove(pFrm.satellite);
-            }
-            else if (pRemove)
-            {
-                //Do nothing
-                ;
+                if (mLandLayer != null)
+                {
+                    mLandLayer.IsVisible = true;
+                }
             }
             else
             {
                 pFrm.theMap.Layers.Insert(0, pFrm.satellite);
+                pFrm.satellite.LegendText = "Bing (satellite)";
+                if (mLandLayer != null)
+                {
+                    mLandLayer.IsVisible = false;
+                }
             }
 
         }
@@ -338,7 +357,7 @@ namespace AsBuiltToGIS.Functions
             mLandLayer.SelectionEnabled = false;
             mRoadsLayer.SelectionEnabled = false;
 
-            ExtFunctions.AddLabelsForFeatureLayer(mRoadsLayer, "Road IDs", "[ADRROADID]", Color.Blue, "Arial", 6, true);
+            ExtFunctions.AddLabelsForFeatureLayer(mRoadsLayer, "Road IDs", "[ADRROADID]", Color.LightBlue, "Arial", 10, true);
             pMap.ViewExtents = mRoadsLayer.Extent;
             pMap.Refresh();
         }
@@ -361,7 +380,7 @@ namespace AsBuiltToGIS.Functions
             string pLabelExpression,
             Color pFontColor = default(Color),
             string pFontFamily = "Arial",
-            int pFontSize = 7,
+            int pFontSize = 12,
             bool pUseDynVis = false,
             int pDynVisWidth = 2000,
             DynamicVisibilityMode pDynVisMode = DynamicVisibilityMode.ZoomedIn)
@@ -947,8 +966,9 @@ namespace AsBuiltToGIS.Functions
             return mSimplifiedRoadsFeatureSet;
         }
 
-        public static void AnalyzeRoadBoundingBoxes(string pMdbFile, Action<Object, bool> aLog, int pOnlyApproved = 0)
+        public static void AnalyzeRoadBoundingBoxes(string pMdbFile, string pLogFile, Action<Object, bool> aLog, int pOnlyApproved = 0)
         {
+            var mRoadSuspects = new List<RoadSuspect>();
             // Setup SQL string to select all or only some streets
             string mSql;
             if (pOnlyApproved == 1)
@@ -1000,9 +1020,7 @@ namespace AsBuiltToGIS.Functions
 
             Debug.WriteLine("Loaded datasource");
             var mLayer = mSource.GetLayerByName("ADRROADSEGMENT");
-            //mLayer.SetAttributeFilter("ADRROADID in (" + string.Join(",", mDistrictNames.Keys) + ")");
 
-            //Debug.WriteLine("Set attribute filter");
             if (mLayer == null) return;
             Debug.WriteLine("Loaded layer");
 
@@ -1065,19 +1083,35 @@ namespace AsBuiltToGIS.Functions
                     mNumShapes++;
                 }
 
-                var mA = mRight - mLeft;
-                var mB = mTop - mBottom;
-                var mC = Math.Sqrt(mA * mA + mB * mB);
-                if (mLength > (2.2 * mC) || mDuplicates > 0)
+                var mBoxWidth = mRight - mLeft;
+                var mBoxHeight = mTop - mBottom;
+                var mBoxDiagonal = Math.Sqrt(mBoxWidth * mBoxWidth + mBoxHeight * mBoxHeight);
+
+                mRoadSuspects.Add(new RoadSuspect(mRoadID.Key,
+                    mNumShapes,
+                    mDuplicates,
+                        Math.Round(mBoxDiagonal, 1),
+                        Math.Round(mLength, 1)));
+
+
+                if (mLength > (2.2 * mBoxDiagonal) || mDuplicates > 0)
                 {
                     aLog(String.Format("r: {0}, s: {1}, l: {2}, d: {3}, bb: {4}",
                         mRoadID.Key,
                         mNumShapes,
                         Math.Round(mLength, 1),
                         mDuplicates,
-                        Math.Round(mC, 1)),
+                        Math.Round(mBoxDiagonal, 1)),
                         true);
                 }
+
+            }
+
+            using (var mCsvWriter = new CsvHelper.CsvWriter(new ExcelSerializer(pLogFile)))
+            {
+                mCsvWriter.WriteRecords(mRoadSuspects);
+                aLog("Wrote output to " + pLogFile, true);
+                aLog("Operation completed...", true);
             }
         }
 

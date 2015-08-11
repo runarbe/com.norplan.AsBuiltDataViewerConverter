@@ -76,7 +76,7 @@ namespace AsBuiltToGIS
             if (_configuredOgr) return;
 
             // Register drivers
-            Ogr.RegisterAll();
+                Ogr.RegisterAll();
             _configuredOgr = true;
 
             PrintDriversOgr();

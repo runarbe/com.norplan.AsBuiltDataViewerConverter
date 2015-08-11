@@ -9,7 +9,6 @@ namespace AsBuiltToGIS.FeatureTypes
         public static PolygonSymbolizer PolygonSymbol(Color pColor, Color pOutlineColor)
         {
             return new PolygonSymbolizer(pColor, pOutlineColor);
-
         }
 
         public static PointSymbolizer PointSymbol(Color pColor, int pSize)

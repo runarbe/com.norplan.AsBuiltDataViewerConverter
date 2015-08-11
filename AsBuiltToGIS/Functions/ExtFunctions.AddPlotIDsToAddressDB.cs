@@ -52,7 +52,7 @@ namespace AsBuiltToGIS.Functions
 
                     foreach (string mSrcFieldName in pFldsToCopy.Keys)
                     {
-                        if (!mTgtLyr.hasField(pFldsToCopy[mSrcFieldName]) && mSrcLyr.hasField(mSrcFieldName))
+                        if (!mTgtLyr.HasField(pFldsToCopy[mSrcFieldName]) && mSrcLyr.HasField(mSrcFieldName))
                         {
                             //var mFieldDefn = mSrcLyr.GetNextFeature().GetFieldDefnRef(mSrcFieldName);
                             var mFieldDefn = new FieldDefn(pFldsToCopy[mSrcFieldName], FieldType.OFTString);
@@ -61,7 +61,7 @@ namespace AsBuiltToGIS.Functions
                         }
                     }
 
-                    if (!mTgtLyr.hasField(mMatchColNm))
+                    if (!mTgtLyr.HasField(mMatchColNm))
                     {
                         var mFieldDefn = new FieldDefn(mMatchColNm, FieldType.OFTString);
                         mFieldDefn.SetWidth(100);

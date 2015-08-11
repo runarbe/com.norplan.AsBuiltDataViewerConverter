@@ -25,13 +25,39 @@ namespace AsBuiltToGIS.Functions
             {
                 var mDb = new Database(mDbFilename);
                 var mAddressUnitFeatures = new AddressUnitFeature(mDb);
+                var mStreetNameFeatures = new StreetNameSignFeature(mDb);
+                var mAddressGuideFeatures = new AddressGuideSignFeature(mDb);
+
                 mAddressUnitFeatures.PopulateFromTable();
+                mStreetNameFeatures.PopulateFromTable();
+                mAddressGuideFeatures.PopulateFromTable();
+
                 var mGroup = new MapGroup();
                 mGroup.LegendText = mDb.dbBasename;
-                IFeatureLayer mAddressUnitLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressUnitFeatures, LayerNames.AddressUnitSigns, MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3), ExtFunctions.GetProjByEPSG(32640));
+                IFeatureLayer mAUNSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressUnitFeatures, LayerNames.AddressUnitSigns, MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3), ExtFunctions.GetProjByEPSG(32640));
                 ExtFunctions.ExportFeatureLayerToOGR(
                     pDrvNm: "FileGDB",
-                    pFLyr: mAddressUnitLayer,
+                    pFLyr: mAUNSLayer,
+                    pOPFn: pOutputFilename,
+                    pSrcProj: ExtFunctions.GetProjByEPSG(32640),
+                    pTgtProj: ExtFunctions.GetProjByEPSG(32640),
+                    pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" },
+                    pAppend: true
+                    );
+                IFeatureLayer mSNSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(mGroup.Layers, mStreetNameFeatures, LayerNames.StreetNameSigns, MapSymbols.PointSymbol(SignColors.StreetNameSign, 3), ExtFunctions.GetProjByEPSG(32640));
+                ExtFunctions.ExportFeatureLayerToOGR(
+                    pDrvNm: "FileGDB",
+                    pFLyr: mSNSLayer,
+                    pOPFn: pOutputFilename,
+                    pSrcProj: ExtFunctions.GetProjByEPSG(32640),
+                    pTgtProj: ExtFunctions.GetProjByEPSG(32640),
+                    pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" },
+                    pAppend: true
+                    );
+                IFeatureLayer mAGSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressGuideFeatures, LayerNames.AddressGuideSigns, MapSymbols.PointSymbol(SignColors.AddressGuideSign, 3), ExtFunctions.GetProjByEPSG(32640));
+                ExtFunctions.ExportFeatureLayerToOGR(
+                    pDrvNm: "FileGDB",
+                    pFLyr: mAGSLayer,
                     pOPFn: pOutputFilename,
                     pSrcProj: ExtFunctions.GetProjByEPSG(32640),
                     pTgtProj: ExtFunctions.GetProjByEPSG(32640),
@@ -82,7 +108,7 @@ namespace AsBuiltToGIS.Functions
             bool mTransformRequired = (pSrcProj != pTgtProj) ? true : false;
 
             // Read the target SRS
-            SpatialReference mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProj.EpsgCode);
+            SpatialReference mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProj.AuthorityCode);
 
             // If transformation is needed, create a shared transformation object for the export
             if (mTransformRequired)
@@ -140,7 +166,7 @@ namespace AsBuiltToGIS.Functions
 
             // Create the new layer
             OSGeo.OGR.Layer l;
-            if (pAppend && ds.hasLayer(pFLyr.LegendText))
+            if (pAppend && ds.HasLayer(pFLyr.LegendText))
             {
                 l = ds.GetLayerByIndex(0);
             }
@@ -171,7 +197,7 @@ namespace AsBuiltToGIS.Functions
 
                 if (pOnlyInFieldMap == false || (pOnlyInFieldMap && pFieldMap.Keys.Contains(mDataColumn.ColumnName)))
                 {
-                    if (!pAppend || !l.hasField(mNewField.GetName()))
+                    if (!pAppend || !l.HasField(mNewField.GetName()))
                     {
                         if (Ogr.OGRERR_NONE != l.CreateField(mNewField, 1))
                         {

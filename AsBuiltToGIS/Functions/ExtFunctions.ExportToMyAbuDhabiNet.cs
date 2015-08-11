@@ -47,7 +47,7 @@ namespace AsBuiltToGIS.Functions
 
             var mRV = new ReturnValue();
 
-            var mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProjection.EpsgCode);
+            var mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProjection.AuthorityCode);
 
             if (pSrcProjection != pTgtProjection)
             {
