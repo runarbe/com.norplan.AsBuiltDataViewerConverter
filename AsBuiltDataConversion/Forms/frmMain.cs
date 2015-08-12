@@ -954,9 +954,5 @@ namespace Norplan.Adm.AsBuiltDataConversion
             mFrm.ShowDialog();
         }
 
-        private void theMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
     }
 }
