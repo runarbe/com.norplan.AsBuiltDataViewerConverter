@@ -912,10 +912,6 @@
         #endregion
 
         private System.Windows.Forms.OpenFileDialog dlgSelectDb;
-        private System.Windows.Forms.ToolStrip theMapToolbar;
-        private System.Windows.Forms.ToolStripButton toolPan;
-        private System.Windows.Forms.ToolStripButton toolZoomIn;
-        private System.Windows.Forms.ToolStripButton toolZoomOut;
         private System.Windows.Forms.MenuStrip theMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -923,6 +919,10 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStrip theMapToolbar;
+        private System.Windows.Forms.ToolStripButton toolPan;
+        private System.Windows.Forms.ToolStripButton toolZoomIn;
+        private System.Windows.Forms.ToolStripButton toolZoomOut;
         private System.Windows.Forms.StatusStrip theStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.ToolStripProgressBar pgBar;
