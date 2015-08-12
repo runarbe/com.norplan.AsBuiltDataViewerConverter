@@ -1,6 +1,5 @@
-AsBuiltToGIS/bin/
-AsBuiltToGIS/obj/Debug/AsBuiltToGIS.csproj.FileListAbsolute.txt
-AsBuiltToGIS/obj
+AsBuiltDataConversion/bin/
+AsBuiltDataConversion/obj
 packages/
 Installer/Output/
 deprecated/
