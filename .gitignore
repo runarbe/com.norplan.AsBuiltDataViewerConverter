@@ -4,3 +4,4 @@ packages/
 Installer/Output/
 deprecated/
 .nuget/
+*.suo
