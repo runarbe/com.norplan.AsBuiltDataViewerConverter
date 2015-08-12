@@ -139,7 +139,6 @@
             // 
             // theMapToolbar
             // 
-            this.theMapToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.theMapToolbar.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.theMapToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnIdentify,
@@ -155,7 +154,7 @@
             this.theMapToolbar.Margin = new System.Windows.Forms.Padding(3);
             this.theMapToolbar.Name = "theMapToolbar";
             this.theMapToolbar.Padding = new System.Windows.Forms.Padding(2);
-            this.theMapToolbar.Size = new System.Drawing.Size(267, 35);
+            this.theMapToolbar.Size = new System.Drawing.Size(298, 35);
             this.theMapToolbar.TabIndex = 9;
             this.theMapToolbar.Text = "toolBar";
             this.theMapToolbar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolBar_ItemClicked);
@@ -253,7 +252,6 @@
             // 
             // theMenuStrip
             // 
-            this.theMenuStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.theMenuStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.theMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem1,
@@ -263,10 +261,10 @@
             this.helpToolStripMenuItem});
             this.theMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.theMenuStrip.Name = "theMenuStrip";
+            this.theMenuStrip.Padding = new System.Windows.Forms.Padding(2);
             this.theMenuStrip.Size = new System.Drawing.Size(1006, 28);
             this.theMenuStrip.TabIndex = 10;
             this.theMenuStrip.Text = "menuStrip1";
-            this.theMenuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.theMenuStrip_ItemClicked);
             // 
             // fileToolStripMenuItem1
             // 
@@ -601,7 +599,7 @@
             // 
             this.MainContainer.ContentPanel.Controls.Add(this.MapTableSplitter);
             this.MainContainer.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.MainContainer.ContentPanel.Size = new System.Drawing.Size(1006, 606);
+            this.MainContainer.ContentPanel.Size = new System.Drawing.Size(1006, 602);
             this.MainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainContainer.LeftToolStripPanelVisible = false;
             this.MainContainer.Location = new System.Drawing.Point(0, 0);
@@ -636,8 +634,8 @@
             // 
             this.MapTableSplitter.Panel2.Controls.Add(this.tcTableLog);
             this.MapTableSplitter.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.MapTableSplitter.Panel2MinSize = 250;
-            this.MapTableSplitter.Size = new System.Drawing.Size(1006, 606);
+            this.MapTableSplitter.Panel2MinSize = 200;
+            this.MapTableSplitter.Size = new System.Drawing.Size(1006, 602);
             this.MapTableSplitter.SplitterDistance = 350;
             this.MapTableSplitter.SplitterWidth = 5;
             this.MapTableSplitter.TabIndex = 17;
@@ -811,7 +809,8 @@
             this.btnSelectDb});
             this.TheDatabaseToolbar.Location = new System.Drawing.Point(3, 63);
             this.TheDatabaseToolbar.Name = "TheDatabaseToolbar";
-            this.TheDatabaseToolbar.Size = new System.Drawing.Size(417, 27);
+            this.TheDatabaseToolbar.Padding = new System.Windows.Forms.Padding(2);
+            this.TheDatabaseToolbar.Size = new System.Drawing.Size(420, 31);
             this.TheDatabaseToolbar.TabIndex = 11;
             // 
             // lblDb
@@ -861,7 +860,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1006, 721);
+            this.ClientSize = new System.Drawing.Size(1006, 715);
             this.Controls.Add(this.MainContainer);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.theMenuStrip;
