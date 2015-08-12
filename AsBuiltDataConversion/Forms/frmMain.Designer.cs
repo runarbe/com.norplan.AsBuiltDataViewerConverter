@@ -139,7 +139,6 @@
             // 
             // theMapToolbar
             // 
-            this.theMapToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.theMapToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.theMapToolbar.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.theMapToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -806,8 +805,6 @@
             // 
             // TheDatabaseToolbar
             // 
-            this.TheDatabaseToolbar.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.TheDatabaseToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.TheDatabaseToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblDb,
             this.tbSelDbFn,
@@ -866,6 +863,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1006, 721);
             this.Controls.Add(this.MainContainer);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.theMenuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
