@@ -139,6 +139,10 @@
             // 
             // theMapToolbar
             // 
+<<<<<<< HEAD
+            this.theMapToolbar.Dock = System.Windows.Forms.DockStyle.None;
+=======
+>>>>>>> 86cf1ddace107a837f0db6b69b29c68f8eb47c85
             this.theMapToolbar.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.theMapToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnIdentify,
