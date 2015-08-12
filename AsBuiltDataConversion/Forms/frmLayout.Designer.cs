@@ -33,12 +33,12 @@
             this.theLayoutControl = new DotSpatial.Controls.LayoutControl();
             this.layoutDocToolStrip1 = new DotSpatial.Controls.LayoutDocToolStrip();
             this.layoutInsertToolStrip1 = new DotSpatial.Controls.LayoutInsertToolStrip();
+            this.layoutListBox1 = new DotSpatial.Controls.LayoutListBox();
             this.layoutMapToolStrip1 = new DotSpatial.Controls.LayoutMapToolStrip();
             this.layoutMenuStrip1 = new DotSpatial.Controls.LayoutMenuStrip();
             this.layoutPropertyGrid1 = new DotSpatial.Controls.LayoutPropertyGrid();
             this.layoutZoomToolStrip1 = new DotSpatial.Controls.LayoutZoomToolStrip();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.layoutListBox1 = new DotSpatial.Controls.LayoutListBox();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -59,12 +59,14 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(726, 503);
+            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(968, 629);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
+            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(726, 577);
+            this.toolStripContainer1.Size = new System.Drawing.Size(968, 710);
             this.toolStripContainer1.TabIndex = 0;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -80,6 +82,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -89,9 +92,9 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(726, 503);
-            this.splitContainer1.SplitterDistance = 506;
-            this.splitContainer1.SplitterWidth = 5;
+            this.splitContainer1.Size = new System.Drawing.Size(968, 629);
+            this.splitContainer1.SplitterDistance = 674;
+            this.splitContainer1.SplitterWidth = 7;
             this.splitContainer1.TabIndex = 1;
             // 
             // theLayoutControl
@@ -109,11 +112,11 @@
             this.theLayoutControl.LayoutPropertyGrip = this.layoutPropertyGrid1;
             this.theLayoutControl.LayoutZoomToolStrip = this.layoutZoomToolStrip1;
             this.theLayoutControl.Location = new System.Drawing.Point(0, 0);
-            this.theLayoutControl.MapControl = null;
             this.theLayoutControl.MapPanMode = false;
+            this.theLayoutControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.theLayoutControl.Name = "theLayoutControl";
             this.theLayoutControl.ShowMargin = false;
-            this.theLayoutControl.Size = new System.Drawing.Size(506, 503);
+            this.theLayoutControl.Size = new System.Drawing.Size(674, 629);
             this.theLayoutControl.TabIndex = 0;
             this.theLayoutControl.Zoom = 0.320787F;
             // 
@@ -121,37 +124,49 @@
             // 
             this.layoutDocToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.layoutDocToolStrip1.LayoutControl = this.theLayoutControl;
-            this.layoutDocToolStrip1.Location = new System.Drawing.Point(3, 24);
+            this.layoutDocToolStrip1.Location = new System.Drawing.Point(161, 0);
             this.layoutDocToolStrip1.Name = "layoutDocToolStrip1";
-            this.layoutDocToolStrip1.Size = new System.Drawing.Size(131, 25);
+            this.layoutDocToolStrip1.Size = new System.Drawing.Size(133, 25);
             this.layoutDocToolStrip1.TabIndex = 1;
             // 
             // layoutInsertToolStrip1
             // 
             this.layoutInsertToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.layoutInsertToolStrip1.LayoutControl = this.theLayoutControl;
-            this.layoutInsertToolStrip1.Location = new System.Drawing.Point(128, 49);
+            this.layoutInsertToolStrip1.Location = new System.Drawing.Point(3, 28);
             this.layoutInsertToolStrip1.Name = "layoutInsertToolStrip1";
-            this.layoutInsertToolStrip1.Size = new System.Drawing.Size(171, 25);
+            this.layoutInsertToolStrip1.Size = new System.Drawing.Size(173, 25);
             this.layoutInsertToolStrip1.TabIndex = 2;
+            // 
+            // layoutListBox1
+            // 
+            this.layoutListBox1.AutoSize = true;
+            this.layoutListBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.layoutListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layoutListBox1.LayoutControl = this.theLayoutControl;
+            this.layoutListBox1.Location = new System.Drawing.Point(13, 12);
+            this.layoutListBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.layoutListBox1.Name = "layoutListBox1";
+            this.layoutListBox1.Size = new System.Drawing.Size(261, 276);
+            this.layoutListBox1.TabIndex = 0;
             // 
             // layoutMapToolStrip1
             // 
             this.layoutMapToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.layoutMapToolStrip1.Enabled = false;
             this.layoutMapToolStrip1.LayoutControl = this.theLayoutControl;
-            this.layoutMapToolStrip1.Location = new System.Drawing.Point(3, 49);
+            this.layoutMapToolStrip1.Location = new System.Drawing.Point(176, 28);
             this.layoutMapToolStrip1.Name = "layoutMapToolStrip1";
-            this.layoutMapToolStrip1.Size = new System.Drawing.Size(125, 25);
+            this.layoutMapToolStrip1.Size = new System.Drawing.Size(127, 25);
             this.layoutMapToolStrip1.TabIndex = 3;
             // 
             // layoutMenuStrip1
             // 
             this.layoutMenuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.layoutMenuStrip1.LayoutControl = this.theLayoutControl;
-            this.layoutMenuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.layoutMenuStrip1.Location = new System.Drawing.Point(0, 53);
             this.layoutMenuStrip1.Name = "layoutMenuStrip1";
-            this.layoutMenuStrip1.Size = new System.Drawing.Size(726, 24);
+            this.layoutMenuStrip1.Size = new System.Drawing.Size(968, 28);
             this.layoutMenuStrip1.TabIndex = 4;
             this.layoutMenuStrip1.Text = "layoutMenuStrip1";
             this.layoutMenuStrip1.CloseClicked += new System.EventHandler(this.layoutMenuStrip1_CloseClicked);
@@ -162,19 +177,19 @@
             this.layoutPropertyGrid1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.layoutPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutPropertyGrid1.LayoutControl = this.theLayoutControl;
-            this.layoutPropertyGrid1.Location = new System.Drawing.Point(10, 10);
+            this.layoutPropertyGrid1.Location = new System.Drawing.Point(13, 12);
             this.layoutPropertyGrid1.Margin = new System.Windows.Forms.Padding(0);
             this.layoutPropertyGrid1.Name = "layoutPropertyGrid1";
-            this.layoutPropertyGrid1.Size = new System.Drawing.Size(195, 238);
+            this.layoutPropertyGrid1.Size = new System.Drawing.Size(261, 299);
             this.layoutPropertyGrid1.TabIndex = 0;
             // 
             // layoutZoomToolStrip1
             // 
             this.layoutZoomToolStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.layoutZoomToolStrip1.LayoutControl = this.theLayoutControl;
-            this.layoutZoomToolStrip1.Location = new System.Drawing.Point(134, 24);
+            this.layoutZoomToolStrip1.Location = new System.Drawing.Point(3, 0);
             this.layoutZoomToolStrip1.Name = "layoutZoomToolStrip1";
-            this.layoutZoomToolStrip1.Size = new System.Drawing.Size(156, 25);
+            this.layoutZoomToolStrip1.Size = new System.Drawing.Size(158, 28);
             this.layoutZoomToolStrip1.TabIndex = 0;
             // 
             // splitContainer2
@@ -188,38 +203,29 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.layoutListBox1);
-            this.splitContainer2.Panel1.Padding = new System.Windows.Forms.Padding(10);
+            this.splitContainer2.Panel1.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.splitContainer2.Panel1MinSize = 100;
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.layoutPropertyGrid1);
-            this.splitContainer2.Panel2.Padding = new System.Windows.Forms.Padding(10);
+            this.splitContainer2.Panel2.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.splitContainer2.Panel2MinSize = 100;
-            this.splitContainer2.Size = new System.Drawing.Size(215, 503);
-            this.splitContainer2.SplitterDistance = 240;
-            this.splitContainer2.SplitterWidth = 5;
+            this.splitContainer2.Size = new System.Drawing.Size(287, 629);
+            this.splitContainer2.SplitterDistance = 300;
+            this.splitContainer2.SplitterWidth = 6;
             this.splitContainer2.TabIndex = 1;
-            // 
-            // layoutListBox1
-            // 
-            this.layoutListBox1.AutoSize = true;
-            this.layoutListBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.layoutListBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layoutListBox1.LayoutControl = this.theLayoutControl;
-            this.layoutListBox1.Location = new System.Drawing.Point(10, 10);
-            this.layoutListBox1.Name = "layoutListBox1";
-            this.layoutListBox1.Size = new System.Drawing.Size(195, 220);
-            this.layoutListBox1.TabIndex = 0;
             // 
             // frmLayout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 577);
+            this.ClientSize = new System.Drawing.Size(968, 710);
             this.Controls.Add(this.toolStripContainer1);
             this.MainMenuStrip = this.layoutMenuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmLayout";
+            this.ShowIcon = false;
             this.Text = "Print and Export As-Built Data";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmLayout_Load);
