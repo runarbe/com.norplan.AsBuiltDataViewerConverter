@@ -306,7 +306,16 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         private void ProxyParseSelectedDatabase()
         {
-            ExtFunctions.ParseSelectedDatabase(theMap, ProjectionInfo.FromEpsgCode(32640));
+            try
+            {
+                ExtFunctions.ParseSelectedDatabase(theMap, ProjectionInfo.FromEpsgCode(32640));
+                Log("Operation completed");
+
+            }
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);
+            }
         }
 
         private void ProxyCreateRandom()
@@ -722,9 +731,16 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 this.Log("Please select an output filename");
                 return;
             }
+            try
+            {
+                ExtFunctions.ExportMultipleToMyAbuDhabiNet(this, dlgSelectDBs.FileNames, dlgSaveFile.FileName);
+                Log("Operation completed");
 
-            ExtFunctions.ExportMultipleToMyAbuDhabiNet(this, dlgSelectDBs.FileNames, dlgSaveFile.FileName);
-
+            }
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);
+            }
         }
 
         private void fileGDBforADMToolStripMenuItem_Click(object sender, EventArgs e)
@@ -766,8 +782,14 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 mSelectedFolder = mFolder;
             }
 
-
-            ExtFunctions.ExportMultipleToOGR(this, dlgSelectDBs.FileNames, mSelectedFolder);
+            try
+            {
+                ExtFunctions.ExportMultipleToOGR(this, dlgSelectDBs.FileNames, mSelectedFolder);
+            }
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);
+            }
         }
 
         private void addPlotIDsToFGDBToolStripMenuItem_Click(object sender, EventArgs e)
@@ -795,8 +817,15 @@ namespace Norplan.Adm.AsBuiltDataConversion
             string mFeatClassName = "Address_unit_signs";
 
             Log("Adding zone, sector and plot to address unit signs");
-            ExtFunctions.AddPlotIDsToAddressDB(this, mOnwaniFileGDB, mPlotShapefile, mFldsToCopy, "PLOT", mBufferSteps, mFeatClassName);
-            Log("Completed process");
+            try
+            {
+                ExtFunctions.AddPlotIDsToAddressDB(this, mOnwaniFileGDB, mPlotShapefile, mFldsToCopy, "PLOT", mBufferSteps, mFeatClassName);
+                Log("Completed process");
+            }
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);
+            }
 
         }
 
@@ -837,27 +866,25 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         private void importAddressingDistrictsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Add select dialog here...
-            dlgOpenMdbFile.Filter = "Addressing Database|adm-adr.mdb";
+            dlgOpenMdbFile.Title = "Please select an addressing database";
+            dlgOpenMdbFile.FileName = "*.mdb";
+            dlgOpenMdbFile.Filter = "Addressing Database|*.mdb";
+
             if (dlgOpenMdbFile.ShowDialog() == DialogResult.OK)
             {
-                //ExtFunctions.OutputDistricts(dlgOpenMdbFile.FileName);
-                var mDistrictsFeatureSet = ExtFunctions.GetDistrictsFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 0);
-                var mDistrictsLayer = ExtFunctions.GetFeatureLayer(theMap.Layers, mDistrictsFeatureSet, "Districts", MapSymbols.PolygonSymbol(Color.Transparent, Color.Red), KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
-                var f = mDistrictsFeatureSet.GetFeature(1);
-
-
-                //dlgSaveFile.Filter = "FileGeodatabases|*.gdb";
-                //dlgSaveFile.Title = "Save imported roads to ESRI FileGDB";
-                //if (dlgSaveFile.ShowDialog() == DialogResult.OK)
-                //{
-                //    ExtFunctions.ExportFeatureLayerToOGR("FileGDB", mDistrictsLayer, dlgSaveFile.FileName, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
-                //}
-                //if (MessageBox.Show("Add imported roads to map?", "Import roads", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                //{
-                mDistrictsLayer.Reproject(theMap.Projection);
-                theMap.Refresh();
-                //}
+                try
+                {
+                    var mDistrictsFeatureSet = ExtFunctions.GetDistrictsFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 0);
+                    var mDistrictsLayer = ExtFunctions.GetFeatureLayer(theMap.Layers, mDistrictsFeatureSet, "Districts", MapSymbols.PolygonSymbol(Color.Transparent, Color.Red), KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
+                    var f = mDistrictsFeatureSet.GetFeature(1);
+                    mDistrictsLayer.Reproject(theMap.Projection);
+                    theMap.Refresh();
+                    Log("Operation completed");
+                }
+                catch (Exception ex)
+                {
+                    Log("Operation aborted: " + ex.Message);
+                }
             }
 
         }
@@ -865,7 +892,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
         private void identifyRoadDefinitionSuspectsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Add select dialog here...
-            dlgOpenMdbFile.Filter = "Addressing Database|adm-adr.mdb";
+            dlgOpenMdbFile.Filter = "Addressing Personal Geodatabase|*.mdb";
             dlgOpenMdbFile.FileName = "*.mdb";
             if (dlgOpenMdbFile.ShowDialog() == DialogResult.OK)
             {
@@ -875,83 +902,109 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 dlgSaveFile.Filter = "Excel log files|*-log.xlsx";
                 if (dlgSaveFile.ShowDialog() == DialogResult.OK)
                 {
-                    ExtFunctions.AnalyzeRoadBoundingBoxes(dlgOpenMdbFile.FileName, dlgSaveFile.FileName, Log);
+                    try
+                    {
+                        ExtFunctions.AnalyzeRoadBoundingBoxes(dlgOpenMdbFile.FileName, dlgSaveFile.FileName, Log);
+                        Log("Operation completed");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log("Operation aborted: " + ex.Message);
+                    }
                 }
             }
         }
 
         private void testQRCodesOfSelectedLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IFeatureLayer mLayer;
-            string mDistrictsShapefile = Application.StartupPath + "/GisData/districts.shp";
-
-            var mQrTestResults = new List<QrTestResult>();
-
-            if (null == (mLayer = ExtFunctions.GetSelectedPointLayer(theMap)))
+            try
             {
-                Log("The selected layer is not a point feature");
-                return;
-            }
-            else
-            {
-                dlgSaveFile.FileName = DateTime.Now.ToString("yyyyMMdd") + "-qrtest.log.xlsx";
-                dlgSaveFile.Title = "Please select a log file location (optional)";
-                dlgSaveFile.Filter = "Excel log files|*.log.xslx";
-                if (dlgSaveFile.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                IFeatureLayer mLayer;
+                string mDistrictsShapefile = Application.StartupPath + "/GisData/districts.shp";
+
+                var mQrTestResults = new List<QrTestResult>();
+
+                if (null == (mLayer = ExtFunctions.GetSelectedPointLayer(theMap)))
                 {
-                    QRLib.setLogFile(dlgSaveFile.FileName);
-                }
-                bool HasQRCode = false;
-                foreach (var mColumn in mLayer.DataSet.GetColumns())
-                {
-                    if (mColumn.ColumnName == "QR_CODE")
-                    {
-                        HasQRCode = true;
-                        break;
-                    }
-                }
-                if (!HasQRCode)
-                {
-                    Log("No QR code in selected layer");
+                    Log("The selected layer is not a point feature");
+                    return;
                 }
                 else
                 {
-                    foreach (var mFeature in mLayer.DataSet.Features)
+                    dlgSaveFile.FileName = DateTime.Now.ToString("yyyyMMdd") + "-qrtest.log.xlsx";
+                    dlgSaveFile.Title = "Please select a log file location (optional)";
+                    dlgSaveFile.Filter = "Excel log files|*.log.xslx";
+                    if (dlgSaveFile.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                     {
-                        var mQRCode = mFeature.DataRow["QR_CODE"].ToString();
-                        if (mFeature.FeatureType == FeatureType.Point)
-                        {
-                            DotSpatial.Topology.Point mPoint = (DotSpatial.Topology.Point)mFeature.BasicGeometry;
-                            var mResult = mQRCode.TestQRCode(mDistrictsShapefile, false, mPoint.X, mPoint.Y); 
-                            Log(mResult);
-                            mQrTestResults.Add(mResult);
-                        }
-                        else
-                        {
-                            var mResult = mQRCode.TestQRCode(mDistrictsShapefile);
-                            Log(mResult);
-                            mQrTestResults.Add(mResult);
-                        }
-                        Application.DoEvents();
+                        QRLib.setLogFile(dlgSaveFile.FileName);
                     }
-                }
+                    bool HasQRCode = false;
+                    foreach (var mColumn in mLayer.DataSet.GetColumns())
+                    {
+                        if (mColumn.ColumnName == "QR_CODE")
+                        {
+                            HasQRCode = true;
+                            break;
+                        }
+                    }
+                    if (!HasQRCode)
+                    {
+                        Log("No QR code in selected layer");
+                    }
+                    else
+                    {
+                        foreach (var mFeature in mLayer.DataSet.Features)
+                        {
+                            var mQRCode = mFeature.DataRow["QR_CODE"].ToString();
+                            if (mFeature.FeatureType == FeatureType.Point)
+                            {
+                                DotSpatial.Topology.Point mPoint = (DotSpatial.Topology.Point)mFeature.BasicGeometry;
+                                var mResult = mQRCode.TestQRCode(mDistrictsShapefile, false, mPoint.X, mPoint.Y);
+                                Log(mResult);
+                                mQrTestResults.Add(mResult);
+                            }
+                            else
+                            {
+                                var mResult = mQRCode.TestQRCode(mDistrictsShapefile);
+                                Log(mResult);
+                                mQrTestResults.Add(mResult);
+                            }
+                            Application.DoEvents();
+                        }
+                    }
 
-                using (var mCsvWriter = new CsvHelper.CsvWriter(new ExcelSerializer(dlgSaveFile.FileName)))
-                {
-                    mCsvWriter.WriteRecords(mQrTestResults);
-                    Log("Wrote output to " + dlgSaveFile.FileName + "...");
-                    Log("Operation completed");
-                }
+                    using (var mCsvWriter = new CsvHelper.CsvWriter(new ExcelSerializer(dlgSaveFile.FileName)))
+                    {
+                        mCsvWriter.WriteRecords(mQrTestResults);
+                        Log("Wrote output to " + dlgSaveFile.FileName + "...");
+                        Log("Operation completed");
+                    }
 
+                }
             }
-
-
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);
+            }
         }
 
         private void importZoneSectorAndPlotsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var mFrm = new frmPlotImport(Log);
-            mFrm.ShowDialog();
+            try
+            {
+                var mFrm = new frmPlotImport(Log);
+                mFrm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                Log("Operation aborted: " + ex.Message);                
+                throw;
+            }
+        }
+
+        private void toolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

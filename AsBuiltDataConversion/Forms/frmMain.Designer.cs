@@ -155,7 +155,7 @@
             this.theMapToolbar.Margin = new System.Windows.Forms.Padding(3);
             this.theMapToolbar.Name = "theMapToolbar";
             this.theMapToolbar.Padding = new System.Windows.Forms.Padding(2);
-            this.theMapToolbar.Size = new System.Drawing.Size(298, 35);
+            this.theMapToolbar.Size = new System.Drawing.Size(267, 35);
             this.theMapToolbar.TabIndex = 9;
             this.theMapToolbar.Text = "toolBar";
             this.theMapToolbar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolBar_ItemClicked);
@@ -253,6 +253,7 @@
             // 
             // theMenuStrip
             // 
+            this.theMenuStrip.Dock = System.Windows.Forms.DockStyle.None;
             this.theMenuStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.theMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem1,
@@ -301,6 +302,7 @@
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
             this.toolsToolStripMenuItem.Text = "&Tools";
+            this.toolsToolStripMenuItem.Click += new System.EventHandler(this.toolsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -571,7 +573,7 @@
             this.theDataGridView.Location = new System.Drawing.Point(0, 0);
             this.theDataGridView.Margin = new System.Windows.Forms.Padding(4);
             this.theDataGridView.Name = "theDataGridView";
-            this.theDataGridView.Size = new System.Drawing.Size(992, 188);
+            this.theDataGridView.Size = new System.Drawing.Size(992, 178);
             this.theDataGridView.TabIndex = 1;
             // 
             // tbLog
@@ -582,7 +584,7 @@
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLog.Size = new System.Drawing.Size(992, 216);
+            this.tbLog.Size = new System.Drawing.Size(992, 212);
             this.tbLog.TabIndex = 0;
             // 
             // dlgOpenShapefile
@@ -600,14 +602,14 @@
             // 
             this.MainContainer.ContentPanel.Controls.Add(this.MapTableSplitter);
             this.MainContainer.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.MainContainer.ContentPanel.Size = new System.Drawing.Size(1006, 602);
+            this.MainContainer.ContentPanel.Size = new System.Drawing.Size(1006, 596);
             this.MainContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainContainer.LeftToolStripPanelVisible = false;
             this.MainContainer.Location = new System.Drawing.Point(0, 0);
             this.MainContainer.Margin = new System.Windows.Forms.Padding(4);
             this.MainContainer.Name = "MainContainer";
             this.MainContainer.RightToolStripPanelVisible = false;
-            this.MainContainer.Size = new System.Drawing.Size(1006, 721);
+            this.MainContainer.Size = new System.Drawing.Size(1006, 715);
             this.MainContainer.TabIndex = 16;
             this.MainContainer.Text = "toolStripContainer1";
             // 
@@ -636,7 +638,7 @@
             this.MapTableSplitter.Panel2.Controls.Add(this.tcTableLog);
             this.MapTableSplitter.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.MapTableSplitter.Panel2MinSize = 200;
-            this.MapTableSplitter.Size = new System.Drawing.Size(1006, 602);
+            this.MapTableSplitter.Size = new System.Drawing.Size(1006, 596);
             this.MapTableSplitter.SplitterDistance = 350;
             this.MapTableSplitter.SplitterWidth = 5;
             this.MapTableSplitter.TabIndex = 17;
@@ -716,7 +718,7 @@
             this.tcTableLog.Location = new System.Drawing.Point(0, 0);
             this.tcTableLog.Name = "tcTableLog";
             this.tcTableLog.SelectedIndex = 0;
-            this.tcTableLog.Size = new System.Drawing.Size(1006, 251);
+            this.tcTableLog.Size = new System.Drawing.Size(1006, 241);
             this.tcTableLog.TabIndex = 15;
             // 
             // TableTab
@@ -725,7 +727,7 @@
             this.TableTab.Location = new System.Drawing.Point(4, 25);
             this.TableTab.Name = "TableTab";
             this.TableTab.Padding = new System.Windows.Forms.Padding(3);
-            this.TableTab.Size = new System.Drawing.Size(998, 222);
+            this.TableTab.Size = new System.Drawing.Size(998, 212);
             this.TableTab.TabIndex = 0;
             this.TableTab.Text = "Attribute table";
             this.TableTab.UseVisualStyleBackColor = true;
@@ -738,14 +740,14 @@
             // 
             this.TableToolStripContainer.ContentPanel.Controls.Add(this.theDataGridView);
             this.TableToolStripContainer.ContentPanel.Margin = new System.Windows.Forms.Padding(4);
-            this.TableToolStripContainer.ContentPanel.Size = new System.Drawing.Size(992, 188);
+            this.TableToolStripContainer.ContentPanel.Size = new System.Drawing.Size(992, 178);
             this.TableToolStripContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableToolStripContainer.LeftToolStripPanelVisible = false;
             this.TableToolStripContainer.Location = new System.Drawing.Point(3, 3);
             this.TableToolStripContainer.Margin = new System.Windows.Forms.Padding(4);
             this.TableToolStripContainer.Name = "TableToolStripContainer";
             this.TableToolStripContainer.RightToolStripPanelVisible = false;
-            this.TableToolStripContainer.Size = new System.Drawing.Size(992, 216);
+            this.TableToolStripContainer.Size = new System.Drawing.Size(992, 206);
             this.TableToolStripContainer.TabIndex = 2;
             this.TableToolStripContainer.Text = "toolStripContainer1";
             // 
@@ -797,13 +799,14 @@
             this.LogTab.Location = new System.Drawing.Point(4, 25);
             this.LogTab.Name = "LogTab";
             this.LogTab.Padding = new System.Windows.Forms.Padding(3);
-            this.LogTab.Size = new System.Drawing.Size(998, 222);
+            this.LogTab.Size = new System.Drawing.Size(998, 218);
             this.LogTab.TabIndex = 1;
             this.LogTab.Text = "Log output";
             this.LogTab.UseVisualStyleBackColor = true;
             // 
             // TheDatabaseToolbar
             // 
+            this.TheDatabaseToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.TheDatabaseToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblDb,
             this.tbSelDbFn,
