@@ -169,6 +169,10 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ogr_csharp, Version=1.0.5121.13209, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\release-1600-gdal-mapserver\bin\gdal\csharp\ogr_csharp.dll</HintPath>
@@ -277,6 +281,7 @@
     <Compile Include="Functions\OgrExt.cs" />
     <Compile Include="Functions\SLib.cs" />
     <Compile Include="Functions\StringExt.cs" />
+    <Compile Include="Functions\UpdateCheck.cs" />
     <Compile Include="GdalConfiguration.cs" />
     <Compile Include="Functions\Database.cs" />
     <Compile Include="Functions\ExtFunctions.cs" />
