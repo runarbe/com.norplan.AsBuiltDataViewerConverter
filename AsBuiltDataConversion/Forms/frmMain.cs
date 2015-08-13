@@ -1007,5 +1007,17 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         }
 
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateCheck.CheckForUpdates(Log);
+            }
+            catch (Exception ex)
+            {
+                Log(ex.Message);
+            }
+        }
+
     }
 }

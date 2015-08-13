@@ -74,7 +74,6 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.expandWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theStatusStrip = new System.Windows.Forms.StatusStrip();
             this.lblProgress = new System.Windows.Forms.ToolStripStatusLabel();
             this.pgBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -106,6 +105,7 @@
             this.dlgOpenMdbFile = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectDBs = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theMapToolbar.SuspendLayout();
             this.theMenuStrip.SuspendLayout();
             this.theStatusStrip.SuspendLayout();
@@ -504,7 +504,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator5,
             this.aboutToolStripMenuItem,
-            this.expandWordToolStripMenuItem});
+            this.checkForUpdatesToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -512,20 +512,14 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(162, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(194, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // expandWordToolStripMenuItem
-            // 
-            this.expandWordToolStripMenuItem.Name = "expandWordToolStripMenuItem";
-            this.expandWordToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.expandWordToolStripMenuItem.Text = "Expand word";
             // 
             // theStatusStrip
             // 
@@ -584,7 +578,7 @@
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLog.Size = new System.Drawing.Size(992, 212);
+            this.tbLog.Size = new System.Drawing.Size(992, 206);
             this.tbLog.TabIndex = 0;
             // 
             // dlgOpenShapefile
@@ -799,7 +793,7 @@
             this.LogTab.Location = new System.Drawing.Point(4, 25);
             this.LogTab.Name = "LogTab";
             this.LogTab.Padding = new System.Windows.Forms.Padding(3);
-            this.LogTab.Size = new System.Drawing.Size(998, 218);
+            this.LogTab.Size = new System.Drawing.Size(998, 212);
             this.LogTab.TabIndex = 1;
             this.LogTab.Text = "Log output";
             this.LogTab.UseVisualStyleBackColor = true;
@@ -858,6 +852,13 @@
             this.dlgSelectDBs.FileName = "openFileDialog1";
             this.dlgSelectDBs.Filter = "Access databases|*.accdb";
             this.dlgSelectDBs.Multiselect = true;
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -963,7 +964,6 @@
         private System.Windows.Forms.ToolStripMenuItem mapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addGoogleSatelliteToolStripMenuItem;
         public DotSpatial.Controls.Map theMap;
-        private System.Windows.Forms.ToolStripMenuItem expandWordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateQRcodesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRoadsAndRoadCenterLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnToggleSatelliteImagery;
@@ -992,6 +992,7 @@
         private System.Windows.Forms.TabPage LogTab;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
     }
 }
 
