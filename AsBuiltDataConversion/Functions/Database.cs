@@ -12,7 +12,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
     /// <summary>
     /// Database
     /// </summary>
-    public class Database
+    public class Database : IDisposable
     {
         /// <summary>
         /// Database filename
@@ -104,9 +104,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         public void Close()
         {
-            this.dbConnection.Close();
+            if (this.dbConnection != null && this.dbConnection.State != ConnectionState.Closed)
+            {
+                this.dbConnection.Close();
+            }
             this.dbConnection = null;
         }
 
+
+        public void Dispose()
+        {
+            this.Close();
+        }
     }
 }
