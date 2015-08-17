@@ -653,23 +653,40 @@ namespace Norplan.Adm.AsBuiltDataConversion
         private void importRoadsAndRoadCenterLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Add select dialog here...
-            dlgOpenMdbFile.Filter = "Addressing Database|adm-adr.mdb";
+            dlgOpenMdbFile.Filter = "Addressing Database|*.mdb";
             dlgOpenMdbFile.FileName = "*.mdb";
             if (dlgOpenMdbFile.ShowDialog() == DialogResult.OK)
             {
-                var mRoadsFeatureSet = ExtFunctions.GetRoadFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 1);
+                var mRoadsFeatureSet = ExtFunctions.GetRoadFeatureSetFromAdmAdrMdb(ref this.pgBar, Log, dlgOpenMdbFile.FileName, 1);
                 var mRoadsLayer = ExtFunctions.GetFeatureLayer(theMap.Layers, mRoadsFeatureSet, "SimplifiedRoads", MapSymbols.LineSymbol(SignColors.AddressUnitSign, 2), KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
                 dlgSaveFile.Filter = "FileGeodatabases|*.gdb";
                 dlgSaveFile.Title = "Save imported roads to ESRI FileGDB";
                 if (dlgSaveFile.ShowDialog() == DialogResult.OK)
                 {
-                    ExtFunctions.ExportFeatureLayerToOGR("FileGDB", mRoadsLayer, dlgSaveFile.FileName, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
+                    try
+                    {
+                        ExtFunctions.ExportFeatureLayerToOGR("FileGDB", mRoadsLayer, dlgSaveFile.FileName, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N, KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log("Operation cancelled");
+                        Log(ex.Message);
+                    }
                 }
-                if (MessageBox.Show("Add imported roads to map?", "Import roads", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                else
+                {
+                    Log("Export to FileGDB cancelled");
+                }
+                if (MessageBox.Show("Would you like to add the imported roads to the map?", "Import roads", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
                     mRoadsLayer.Reproject(theMap.Projection);
                     theMap.Refresh();
                 }
+
+            }
+            else
+            {
+                Log("Operation cancelled, please select an addressing database file");
             }
         }
 
@@ -1016,6 +1033,23 @@ namespace Norplan.Adm.AsBuiltDataConversion
             catch (Exception ex)
             {
                 Log(ex.Message);
+            }
+        }
+
+        private void cleanMainAddressingDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dlgOpenMdbFile.FileName = "*.mdb";
+            dlgOpenMdbFile.Filter = "ESRI Personal Geodatabase/Access file|*.mdb";
+            dlgOpenMdbFile.Title = "Please select a copy of the addressing geodatabase (adm-adr.mdb)";
+            if (dlgOpenMdbFile.ShowDialog() != DialogResult.OK)
+            {
+                Log("Please select a filename");
+                return;
+            }
+
+            using (AdmAdrCleaner mCleaner = new AdmAdrCleaner(dlgOpenMdbFile.FileName, Log))
+            {
+                Log("Ready to work");
             }
         }
 

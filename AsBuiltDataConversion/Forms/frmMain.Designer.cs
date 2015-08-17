@@ -74,6 +74,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theStatusStrip = new System.Windows.Forms.StatusStrip();
             this.lblProgress = new System.Windows.Forms.ToolStripStatusLabel();
             this.pgBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -105,7 +106,7 @@
             this.dlgOpenMdbFile = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectDBs = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanMainAddressingDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theMapToolbar.SuspendLayout();
             this.theMenuStrip.SuspendLayout();
             this.theStatusStrip.SuspendLayout();
@@ -292,6 +293,7 @@
             this.importRoadsAndRoadCenterLinesToolStripMenuItem,
             this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem,
             this.importAddressingDistrictsToolStripMenuItem,
+            this.cleanMainAddressingDatabaseToolStripMenuItem,
             this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem,
             this.identifyRoadDefinitionSuspectsToolStripMenuItem,
             this.toolStripSeparator2,
@@ -300,7 +302,7 @@
             this.toolStripSeparator3,
             this.testQRCodesOfSelectedLayerToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "&Tools";
             this.toolsToolStripMenuItem.Click += new System.EventHandler(this.toolsToolStripMenuItem_Click);
             // 
@@ -520,6 +522,13 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // theStatusStrip
             // 
@@ -853,12 +862,12 @@
             this.dlgSelectDBs.Filter = "Access databases|*.accdb";
             this.dlgSelectDBs.Multiselect = true;
             // 
-            // checkForUpdatesToolStripMenuItem
+            // cleanMainAddressingDatabaseToolStripMenuItem
             // 
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Name = "cleanMainAddressingDatabaseToolStripMenuItem";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Text = "Clean main addressing database";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Click += new System.EventHandler(this.cleanMainAddressingDatabaseToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -993,6 +1002,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cleanMainAddressingDatabaseToolStripMenuItem;
     }
 }
 
