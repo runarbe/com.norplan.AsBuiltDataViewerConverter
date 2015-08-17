@@ -33,11 +33,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             return typeof(UpdateCheck).Assembly.GetName().Version.ToString();
         }
 
-        public static void CheckForUpdates(Action<string, bool> aLog)
+        public static void CheckForUpdates(Action<string, bool> logFunction)
         {
             if (HasInternetConnection())
             {
-                aLog("Checking for version newer than " + GetCurrentVersion(), true);
+                logFunction("Checking for version newer than " + GetCurrentVersion(), true);
 
                 using (var webClient = new WebClient())
                 {
@@ -47,7 +47,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                         var mJson = JsonConvert.DeserializeObject<UpdateResponse>(mJsonString);
                         if (mJson.Status == 1)
                         {
-                            aLog("An update is available at the web address http://myabudhabi.net/latest", true);
+                            logFunction("An update is available at the web address http://myabudhabi.net/latest", true);
 
                             var dlgSaveFile = new SaveFileDialog();
                             dlgSaveFile.Title = "Please select a location to download the file";
@@ -58,32 +58,32 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                             {
                                 if (dlgSaveFile.ShowDialog() != DialogResult.OK)
                                 {
-                                    aLog("Please select a download location for the update", true);
+                                    logFunction("Please select a download location for the update", true);
                                 }
                             }
 
-                            aLog("Downloading, please wait it may take some minutes...", true);
+                            logFunction("Downloading, please wait it may take some minutes...", true);
                             webClient.DownloadFile("http://myabudhabi.net/latest/files/" + mJson.File.FileName, dlgSaveFile.FileName);
-                            aLog("Download complete, saved file to: " + dlgSaveFile.FileName, true);
-                            aLog("Please exit the application and execute the setup file to upgrade", true);
-                            aLog("Operation complete", true);
+                            logFunction("Download complete, saved file to: " + dlgSaveFile.FileName, true);
+                            logFunction("Please exit the application and execute the setup file to upgrade", true);
+                            logFunction("Operation complete", true);
 
                         }
                         else
                         {
-                            aLog("No update is available", true);
+                            logFunction("No update is available", true);
                         }
                     }
                     catch (Exception ex)
                     {
-                        aLog("An error occured while parsing response from update service", false);
-                        aLog(ex.Message, true);
+                        logFunction("An error occured while parsing response from update service", false);
+                        logFunction(ex.Message, true);
                     }
                 }
             }
             else
             {
-                aLog("You do not appear to be connected to the Internet", true);
+                logFunction("You do not appear to be connected to the Internet", true);
             }
 
         }
