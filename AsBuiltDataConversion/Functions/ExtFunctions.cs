@@ -495,7 +495,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             OSGeo.OGR.Layer l = ds.CreateLayer("AddressUnits", null, wkbGeometryType.wkbPoint, null);
             if (l == null)
             {
-                aLog("Failed to create GML file: AddressUnits",true);
+                aLog("Failed to create GML file: AddressUnits", true);
                 return false;
             }
 
@@ -729,7 +729,6 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             //for (int mFeatureIndex = 0; mFeatureIndex < mTotal2; mFeatureIndex++)
             {
 
-
                 if (mFeature == null)
                 {
                     Debug.WriteLine("Feature #{0} is null", mFeatureIndex);
@@ -744,8 +743,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                         string mWkt = "";
                         mGeometry.ExportToWkb(mWkb);
                         mGeometry.ExportToWkt(out mWkt);
-                        //Debug.WriteLine(mWkt);
-                        //Debug.WriteLine(mFeatureIndex);
+
                         IMultiPolygon mPolygon;
 
                         string mDistrictAbbreviation = mFeature.GetFieldAsString("ABBREVIATION");
@@ -814,170 +812,174 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 mFeatureIndex++;
             }
 
-            //mSimplifiedRoadsFeatureSet.Projection = KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N;
             mSimplifiedRoadsFeatureSet.UpdateExtent();
             Debug.WriteLine("Done creating simplified roads...");
             return mSimplifiedRoadsFeatureSet;
         }
-
 
         /// <summary>
         /// Exports the selected database to a filegeodatabase
         /// </summary>
-        /// <param name="pOnlyApproved"></param>
-        /// <returns></returns>
-        public static FeatureSet GetRoadFeatureSetFromAdmAdrMdb(ref ToolStripProgressBar pPgBar, string pMdbFile, int pOnlyApproved = 0)
+        /// <param name="progressBar">A progress bar object</param>
+        /// <param name="logFunction">A log function</param>
+        /// <param name="mdbFile">The filename of an addressing database</param>
+        /// <param name="approvedOnly">1 to include only approved, 0 to include all</param>
+        /// <returns>Feature set</returns>
+        public static FeatureSet GetRoadFeatureSetFromAdmAdrMdb(ref ToolStripProgressBar progressBar, Action<string, bool> logFunction, string mdbFile, int approvedOnly = 0)
         {
             // Setup SQL string to select all or only some streets
-            string mSql;
-            if (pOnlyApproved == 1)
+            string sqlStatement;
+            if (approvedOnly == 1)
             {
-                mSql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD WHERE APPROVED = 1";
+                sqlStatement = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD WHERE APPROVED = 1";
             }
             else
             {
-                mSql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD";
+                sqlStatement = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD";
             }
+
+            logFunction(sqlStatement, true);
 
             // Setup a dictionary to hold road names
-            var mRoadNames = new Dictionary<int, DataRow>();
+            var roadNames = new Dictionary<int, DataRow>();
 
             // Connect to database and load names
-            var mOdbcConn = new OdbcConnection("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=" + pMdbFile + ";Uid=Admin;Pwd=;");
-            var mDataAdapter = new OdbcDataAdapter(mSql, mOdbcConn);
-            var mDataTable = new DataTable();
-            mDataAdapter.Fill(mDataTable);
-            int ctr1 = 0;
-            int total1 = mDataTable.Rows.Count;
-
-            pPgBar.Value = ctr1;
-            foreach (DataRow mRow in mDataTable.Rows)
+            using (var database = new Database(mdbFile))
             {
-                int mRoadId;
-                if (int.TryParse(mRow["ADRROADID"].ToString(), out mRoadId))
+                var dataTable = database.Query(sqlStatement);
+                progressBar.Value = 0;
+                foreach (DataRow mRow in dataTable.Rows)
                 {
-                    mRoadNames.Add(mRoadId, mRow);
-                }
-                ctr1++;
-                if (ctr1 % 100 == 0)
-                {
-                    double mFraction1 = (((double)ctr1 / (double)total1) * 100);
-                    pPgBar.ProgressBar.Value = (int)(Math.Round(mFraction1));
-                    Application.DoEvents();
-                }
-            }
-            Debug.WriteLine("Done loading road names");
-            mOdbcConn.Close();
-            mDataAdapter = null;
-            mOdbcConn = null;
-
-            // Connect to database using OGR to load geometries
-            var mDriver = Ogr.GetDriverByName("PGeo");
-            if (mDriver == null) return null;
-
-            Debug.WriteLine("Loaded driver");
-            var mSource = mDriver.Open(pMdbFile, 0);
-            if (mSource == null) return null;
-
-            Debug.WriteLine("Loaded datasource");
-            var mLayer = mSource.GetLayerByName("ADRROADSEGMENT");
-            //mLayer.SetAttributeFilter("ADRROADID in (" + string.Join(",", mDistrictNames.Keys) + ")");
-
-            //Debug.WriteLine("Set attribute filter");
-            if (mLayer == null) return null;
-            Debug.WriteLine("Loaded layer");
-
-            // Create simplified roads
-            var mSimplifiedRoadsFeatureSet = new SimplifiedRoads();
-
-            int mTotal2 = mLayer.GetFeatureCount(0);
-            pPgBar.Value = 0;
-            for (int mCtr2 = 0; mCtr2 < mTotal2; mCtr2++)
-            {
-                OSGeo.OGR.Feature mFeature = mLayer.GetFeature(mCtr2);
-                if (mFeature != null)
-                {
-                    OSGeo.OGR.Geometry mGeometry = mFeature.GetGeometryRef();
-                    if (mGeometry != null)
+                    int mRoadId;
+                    if (int.TryParse(mRow["ADRROADID"].ToString(), out mRoadId))
                     {
-                        mGeometry.FlattenTo2D();
-                        byte[] mWkb = new Byte[mGeometry.WkbSize()];
-                        mGeometry.ExportToWkb(mWkb);
+                        roadNames.Add(mRoadId, mRow);
+                    }
+                }
 
-                        //string mWkt = "";
-                        //mGeometry.ExportToWkt(out mWkt);
-                        //Debug.WriteLine(mWkt);
+                // Connect to database using OGR to load geometries
+                var ogrDriver = Ogr.GetDriverByName("PGeo");
 
-                        IMultiLineString mMultiLine;
+                if (ogrDriver == null) return null;
+                logFunction("Loaded driver", true);
 
-                        int mRoadId = -1;
-                        int.TryParse(mFeature.GetFieldAsString("ADRROADID"), out mRoadId);
+                var ogrDataSource = ogrDriver.Open(mdbFile, 0);
+                if (ogrDataSource == null) return null;
+                logFunction("Loaded datasource", true);
 
-                        if (mRoadId != -1)
+                var roadSegmentLayer = ogrDataSource.GetLayerByName("ADRROADSEGMENT");
+                if (roadSegmentLayer == null)
+                {
+                    logFunction("Could not load layer", true);
+                    return null;
+                }
+                logFunction("Loaded layer", true);
+
+                // Create simplified roads
+                var simplifiedRoadsFeatureSet = new SimplifiedRoads();
+
+                int numberOfRoads = roadNames.Count();
+                progressBar.Value = 0;
+                var roadCounter = 0;
+                var segmentCounter = 0;
+
+                foreach (var roadName in roadNames)
+                {
+                    roadCounter++;
+
+                    int roadIdentifier = roadName.Key;
+                    DataRow roadData = roadName.Value;
+
+                    roadSegmentLayer.ResetReading();
+                    roadSegmentLayer.SetAttributeFilter("ADRROADID=" + roadIdentifier);
+
+                    OSGeo.OGR.Feature roadSegment;
+                    var mWkbReader = new WkbReader();
+
+                    while (null != (roadSegment = roadSegmentLayer.GetNextFeature()))
+                    {
+                        segmentCounter++;
+
+                        OSGeo.OGR.Geometry mGeometry = roadSegment.GetGeometryRef();
+
+                        if (mGeometry != null)
                         {
+                            mGeometry.FlattenTo2D();
 
-                            var mWkbReader = new WkbReader();
-                            IGeometry mGeom = mWkbReader.Read(mWkb);
-                            if (mGeom.GetType() == typeof(DotSpatial.Topology.LineString))
+                            byte[] mWkb = new Byte[mGeometry.WkbSize()];
+
+                            mGeometry.ExportToWkb(mWkb);
+
+                            IMultiLineString multiLine;
+
+                            IGeometry roadGeometry = mWkbReader.Read(mWkb);
+
+                            if (roadGeometry.GetType() == typeof(DotSpatial.Topology.LineString))
                             {
                                 var mLineStrings = new List<LineString>();
-                                mLineStrings.Add(mGeom as LineString);
-                                mMultiLine = new DotSpatial.Topology.MultiLineString(mLineStrings);
+                                mLineStrings.Add(roadGeometry as LineString);
+                                multiLine = new DotSpatial.Topology.MultiLineString(mLineStrings);
                             }
                             else
                             {
-                                mMultiLine = mGeom as IMultiLineString;
+                                multiLine = roadGeometry as IMultiLineString;
                             }
 
-                            //Debug.WriteLine(mPolygon.GetType().ToString());
+                            int districtIdentifier, roadClass, roadApproved;
+                            int.TryParse(roadData["ADRDISTRICTID"].ToString(), out districtIdentifier);
+                            var nameArabic = roadData["NAMEARABIC"].ToString();
+                            var nameLatin = roadData["NAMEENGLISH"].ToString();
+                            var namePopularArabic = roadData["NAMEPOPULARARABIC"].ToString();
+                            var namePopularLatin = roadData["NAMEPOPULARENGLISH"].ToString();
+                            int.TryParse(roadData["ROADTYPE"].ToString(), out roadClass);
+                            int.TryParse(roadData["APPROVED"].ToString(), out roadApproved);
 
-                            if (mRoadNames.ContainsKey(mRoadId))
-                            {
-                                var mRoadName = mRoadNames[mRoadId];
-                                int mDistrictId, mRoadClass, mApproved;
-
-                                int.TryParse(mRoadName["ADRDISTRICTID"].ToString(), out mDistrictId);
-                                var mNameArabic = mRoadName["NAMEARABIC"].ToString();
-                                var mNameLatin = mRoadName["NAMEENGLISH"].ToString();
-                                var mNamePopularArabic = mRoadName["NAMEPOPULARARABIC"].ToString();
-                                var mNamePopularLatin = mRoadName["NAMEPOPULARENGLISH"].ToString();
-                                int.TryParse(mRoadName["ROADTYPE"].ToString(), out mRoadClass);
-                                int.TryParse(mRoadName["APPROVED"].ToString(), out mApproved);
-                                mSimplifiedRoadsFeatureSet.AddNewRow(mGeom, mDistrictId, mRoadId, mNameArabic, mNameLatin, mNamePopularArabic, mNamePopularLatin, mRoadClass, mApproved);
-                            }
+                            simplifiedRoadsFeatureSet.AddNewRow(
+                                roadGeometry,
+                                districtIdentifier,
+                                roadIdentifier,
+                                nameArabic,
+                                nameLatin,
+                                namePopularArabic,
+                                namePopularLatin,
+                                roadClass,
+                                roadApproved);
                         }
+                        else
+                        {
+                            logFunction("No geometry", true);
+                        }
+
+                        if (roadCounter % 100 == 0 || roadCounter == numberOfRoads)
+                        {
+                            progressBar.ProgressBar.Value = (int)Math.Round((double)(roadCounter * 100 / numberOfRoads));
+                            Application.DoEvents();
+                        }
+
                     }
 
                 }
 
-                if (mCtr2 % (mTotal2 / 20) == 0)
-                {
-                    double mFraction = (double)mCtr2 / (double)mTotal2;
-                    int mProgress = (int)Math.Round(mFraction * 100);
-                    pPgBar.ProgressBar.Value = mProgress;
-                    Application.DoEvents();
-                }
+                simplifiedRoadsFeatureSet.UpdateExtent();
+                logFunction("Done creating featureset", true);
+                return simplifiedRoadsFeatureSet;
 
             }
 
-            //mSimplifiedRoadsFeatureSet.Projection = KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N;
-            mSimplifiedRoadsFeatureSet.UpdateExtent();
-            Debug.WriteLine("Done creating simplified roads...");
-            return mSimplifiedRoadsFeatureSet;
         }
 
         public static void AnalyzeRoadBoundingBoxes(string pMdbFile, string pLogFile, Action<Object, bool> aLog, int pOnlyApproved = 0)
         {
-            var mRoadSuspects = new List<RoadSuspect>();
+            var roadSuspects = new List<RoadSuspect>();
             // Setup SQL string to select all or only some streets
-            string mSql;
+            string sql;
             if (pOnlyApproved == 1)
             {
-                mSql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD WHERE APPROVED = 1 ORDER BY ADRROADID";
+                sql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD WHERE APPROVED = 1 ORDER BY ADRROADID";
             }
             else
             {
-                mSql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD ORDER BY ADRROADID";
+                sql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD ORDER BY ADRROADID";
             }
 
             // Setup a dictionary to hold road names
@@ -985,7 +987,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             // Connect to database and load names
             var mOdbcConn = new OdbcConnection("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=" + pMdbFile + ";Uid=Admin;Pwd=;");
-            var mDataAdapter = new OdbcDataAdapter(mSql, mOdbcConn);
+            var mDataAdapter = new OdbcDataAdapter(sql, mOdbcConn);
             var mDataTable = new DataTable();
             mDataAdapter.Fill(mDataTable);
             int ctr1 = 0;
@@ -1087,7 +1089,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 var mBoxHeight = mTop - mBottom;
                 var mBoxDiagonal = Math.Sqrt(mBoxWidth * mBoxWidth + mBoxHeight * mBoxHeight);
 
-                mRoadSuspects.Add(new RoadSuspect(mRoadID.Key,
+                roadSuspects.Add(new RoadSuspect(mRoadID.Key,
                     mNumShapes,
                     mDuplicates,
                         Math.Round(mBoxDiagonal, 1),
@@ -1109,7 +1111,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             using (var mCsvWriter = new CsvHelper.CsvWriter(new ExcelSerializer(pLogFile)))
             {
-                mCsvWriter.WriteRecords(mRoadSuspects);
+                mCsvWriter.WriteRecords(roadSuspects);
                 aLog("Wrote output to " + pLogFile, true);
                 aLog("Operation completed...", true);
             }
