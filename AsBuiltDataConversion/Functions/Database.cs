@@ -17,88 +17,93 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <summary>
         /// Database filename
         /// </summary>
-        public string dbFilename = "";
+        public string DbFilename = "";
         /// <summary>
         /// Name of directory where database is stored
         /// </summary>
-        public string dbDir = "";
+        public string DbDirectory = "";
         /// <summary>
         /// Database base filename
         /// </summary>
-        public string dbBasename = "";
+        public string DbBaseName = "";
 
         /// <summary>
         /// A command object
         /// </summary>
-        OleDbCommand cmd = null;
+        private OleDbCommand _cmd = null;
 
         /// <summary>
         /// A data adapter object
         /// </summary>
-        OleDbDataAdapter dataAdapter = null;
+        private OleDbDataAdapter _dataAdapter = null;
 
         /// <summary>
         /// Database connection
         /// </summary>
-        OleDbConnection dbConnection = null;
+        private OleDbConnection _dbConnection = null;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="pOPFn">The filename of the access 2010+ database to open</param>
-        public Database(string pFilename)
+        public Database(string dbFileName)
         {
-            this.dbFilename = pFilename;
-            var mFileInfo = new FileInfo(pFilename);
+            this.DbFilename = dbFileName;
+            var dbFileInfo = new FileInfo(dbFileName);
 
-            this.dbBasename = mFileInfo.Name.Split('.')[0];
-            this.dbDir = mFileInfo.DirectoryName;
+            this.DbBaseName = dbFileInfo.Name.Split('.')[0];
+            this.DbDirectory = dbFileInfo.DirectoryName;
             this.Open();
+            this._cmd = new OleDbCommand("", this._dbConnection);
         }
 
         /// <summary>
-        /// Executes an SQL statement
+        /// Executes SQL
         /// </summary>
-        /// <param name="sql">Any SQL statement</param>
-        /// <returns>Returns the number of rows affected or -1 on error</returns>
-        public int Execute(string sql)
+        /// <param name="sqlStatement">The SQL statement to execute, typically an 'INSERT' or 'UPDATE'</param>
+        /// <returns>The number of rows affected or -1 on error</returns>
+        public int Execute(string sqlStatement)
         {
-            if (this.dbConnection == null)
+            if (this._dbConnection == null)
             {
                 this.Open();
             }
             try
             {
-                this.cmd.CommandText = sql;
-                this.cmd.Connection = dbConnection;
-                return this.cmd.ExecuteNonQuery();
+                this._cmd.CommandText = sqlStatement;
+                return this._cmd.ExecuteNonQuery();
             }
             catch (Exception)
             {
-                return -1;                
+                return -1;
             }
         }
 
-        public DataTable Query(string pSql)
+        /// <summary>
+        /// Queries SQL
+        /// </summary>
+        /// <param name="sqlStatement">The SQL statement to execute, typically a SELECT</param>
+        /// <returns>A .NET DataTable object containing the records returned by the statement</returns>
+        public DataTable Query(string sqlStatement)
         {
-            if (this.dbConnection == null)
+            if (this._dbConnection == null)
             {
                 this.Open();
             }
-            this.dataAdapter = new OleDbDataAdapter(pSql, this.dbConnection);
-            var mDataset = new DataSet();
-            this.dataAdapter.Fill(mDataset);
-            return mDataset.Tables[0];
+            this._dataAdapter = new OleDbDataAdapter(sqlStatement, this._dbConnection);
+            var dataSet = new DataSet();
+            this._dataAdapter.Fill(dataSet);
+            return dataSet.Tables[0];
         }
 
-        public string QuerySingle(string pSql)
+        public string QuerySingle(string sqlStatement)
         {
-            if (this.dbConnection == null)
+            if (this._dbConnection == null)
             {
                 this.Open();
             }
-            this.cmd = new OleDbCommand(pSql, this.dbConnection);
-            return this.cmd.ExecuteScalar().ToString();
+            this._cmd = new OleDbCommand(sqlStatement, this._dbConnection);
+            return this._cmd.ExecuteScalar().ToString();
         }
 
         /// <summary>
@@ -106,13 +111,13 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         public void Open()
         {
-            string connectionString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Jet OLEDB:Database Password=thePassword;", this.dbFilename);
+            string connectionString = String.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Jet OLEDB:Database Password=thePassword;", this.DbFilename);
 
-            this.dbConnection = new OleDbConnection(connectionString);
+            this._dbConnection = new OleDbConnection(connectionString);
 
             try
             {
-                this.dbConnection.Open();
+                this._dbConnection.Open();
 
             }
             catch (Exception)
@@ -127,14 +132,16 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         public void Close()
         {
-            if (this.dbConnection != null && this.dbConnection.State != ConnectionState.Closed)
+            if (this._dbConnection != null && this._dbConnection.State != ConnectionState.Closed)
             {
-                this.dbConnection.Close();
+                this._dbConnection.Close();
             }
-            this.dbConnection = null;
+            this._dbConnection = null;
         }
 
-
+        /// <summary>
+        /// Disposes of the object and frees up resources associated with it
+        /// </summary>
         public void Dispose()
         {
             this.Close();
