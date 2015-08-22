@@ -6,6 +6,7 @@ using System.Data.Odbc;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Norplan.Adm.AsBuiltDataConversion.TypeExtensions;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
