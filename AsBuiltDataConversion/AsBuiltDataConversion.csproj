@@ -296,6 +296,7 @@
     <Compile Include="Functions\Utilities.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeExtensions\ObjExt.cs" />
     <Content Include="Layers.ico" />
     <Content Include="oci.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
