@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
@@ -14,15 +15,23 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
         public static bool HasInternetConnection()
         {
-            Ping myPing = new Ping();
-            String host = "google.com";
-            byte[] buffer = new byte[32];
-            int timeout = 1000;
-            PingOptions pingOptions = new PingOptions();
-            PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-            if (reply.Status == IPStatus.Success)
+            try
             {
-                return true;
+                Ping myPing = new Ping();
+                String host = "google.com";
+                byte[] buffer = new byte[32];
+                int timeout = 1000;
+                PingOptions pingOptions = new PingOptions();
+                PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
+                if (reply.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
 
             return false;
@@ -95,6 +104,20 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             public string Newer;
             public string Size;
             public string Date;
+
+            public SetupFile(
+                string fileName,
+                string version,
+                string newer,
+                string size,
+                string date)
+            {
+                FileName = fileName;
+                Version = version;
+                Newer = newer;
+                Size = size;
+                Date = date;
+            }
         }
 
         public class UpdateResponse
@@ -102,6 +125,16 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             public int Status;
             public string Message;
             public SetupFile File;
+
+            public UpdateResponse(
+                int status,
+                string message,
+                SetupFile file)
+            {
+                Status = status;
+                Message = message;
+                File = file;
+            }
         }
 
 
