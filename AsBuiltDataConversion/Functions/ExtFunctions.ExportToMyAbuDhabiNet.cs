@@ -29,7 +29,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 var mAddressUnitFeatures = new AddressUnitFeature(mDb);
                 mAddressUnitFeatures.PopulateFromTable();
                 var mGroup = new MapGroup();
-                mGroup.LegendText = mDb.dbBasename;
+                mGroup.LegendText = mDb.DbBaseName;
                 IPointLayer mAddressUnitLayer = (IPointLayer)ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressUnitFeatures, LayerNames.AddressUnitSigns, MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3), ExtFunctions.GetProjByEPSG(32640));
                 ExtFunctions.ExportToMyAbuDhabiNet(pOutputFilename, mAddressUnitLayer, ExtFunctions.GetProjByEPSG(4326), ExtFunctions.GetProjByEPSG(4326), true);
                 pFrm.Log("Completed parsing: " + mDbFilename);

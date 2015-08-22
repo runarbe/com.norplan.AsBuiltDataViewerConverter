@@ -201,7 +201,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             if (frmMain.dbx != null)
             {
                 var mGroup = new MapGroup();
-                mGroup.LegendText = frmMain.dbx.dbBasename;
+                mGroup.LegendText = frmMain.dbx.DbBaseName;
 
                 var mAddressUnitFeatures = new AddressUnitFeature(frmMain.dbx);
                 mAddressUnitFeatures.PopulateFromTable();

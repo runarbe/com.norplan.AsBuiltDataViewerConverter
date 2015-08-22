@@ -34,7 +34,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 mAddressGuideFeatures.PopulateFromTable();
 
                 var mGroup = new MapGroup();
-                mGroup.LegendText = mDb.dbBasename;
+                mGroup.LegendText = mDb.DbBaseName;
                 IFeatureLayer mAUNSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(
                     mGroup.Layers, mAddressUnitFeatures,
                     LayerNames.AddressUnitSigns,

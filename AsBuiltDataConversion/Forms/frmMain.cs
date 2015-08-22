@@ -269,7 +269,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             {
                 // Get filename
                 dlgSaveFile.Title = "Please select where to save the GML file";
-                dlgSaveFile.FileName = frmMain.dbx.dbBasename + ".gml";
+                dlgSaveFile.FileName = frmMain.dbx.DbBaseName + ".gml";
                 dlgSaveFile.Filter = "GML file|*.gml";
                 if (dlgSaveFile.ShowDialog() != DialogResult.OK)
                 {
