@@ -27,6 +27,8 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         private DataSource OgrDataSourceCopy;
 
+        private string OgrDataSourceCopyBaseName;
+
         private Layer OgrLayerCopy;
 
         public AdmAdrCleaner(string fileName, Action<string, bool> logFunction = null)
@@ -52,9 +54,10 @@ namespace Norplan.Adm.AsBuiltDataConversion
                     throw new Exception("No layer by the name of 'ADRROADSEGMENT' present in selected database");
                 }
 
-                var temporaryShapefileName = Path.GetTempPath() + "/" + Path.GetFileNameWithoutExtension(Path.GetTempFileName()) + ".shp";
-                Log(temporaryShapefileName);
-                OgrDataSourceCopy = Ogr.GetDriverByName("ESRI Shapefile").CreateDataSource(temporaryShapefileName, null);
+                OgrDataSourceCopyBaseName = Path.GetFileNameWithoutExtension(Path.GetTempFileName());
+                var tmpShapefileName = Path.GetTempPath() + OgrDataSourceCopyBaseName + ".shp";
+                Log(tmpShapefileName);
+                OgrDataSourceCopy = Ogr.GetDriverByName("ESRI Shapefile").CreateDataSource(tmpShapefileName, null);
                 OgrLayerCopy = OgrDataSourceCopy.CopyLayer(OgrLayer, "Road", null);
                 if (OgrLayerCopy == null)
                 {
@@ -109,7 +112,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             {
                 var roadIdsToBeDeleted = new List<int>();
 
-                var roadTable = AccessDatabase.Query("SELECT ADRROADID FROM ADM_ADRROAD");
+                var roadTable = AccessDatabase.Query("SELECT ADRROADID FROM ADM_ADRROAD ORDER BY ADRROADID ASC");
 
                 var roadCounter = 0;
 
@@ -154,7 +157,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
                     }
                     else
                     {
-                        Log(sql, true);
+                        //Log(sql, true);
                     }
 
                     if (deletedRoads % 100 == 0 || deletedRoads == numberOfRoadsToBeDeleted)
@@ -185,7 +188,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             {
                 OgrLayer.Dispose();
             }
-
+ 
             if (OgrLayerCopy != null)
             {
                 OgrLayerCopy.Dispose();
@@ -199,6 +202,20 @@ namespace Norplan.Adm.AsBuiltDataConversion
             if (OgrDataSourceCopy != null)
             {
                 OgrDataSourceCopy.Dispose();
+
+                foreach (var fileToDelete in Directory.GetFiles(Path.GetTempPath(), OgrDataSourceCopyBaseName + ".*"))
+                {
+                    LogFunction("Deleting file: " + fileToDelete + "...", true);
+                    try
+                    {
+                        File.Delete(fileToDelete);
+                    }
+                    catch (Exception)
+                    {
+                        LogFunction("Error: Unable to delete file", true);
+                    }
+                }
+
             }
 
             if (OgrDriver != null)
