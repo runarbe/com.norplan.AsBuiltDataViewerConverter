@@ -56,6 +56,29 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             this.Open();
         }
 
+        /// <summary>
+        /// Executes an SQL statement
+        /// </summary>
+        /// <param name="sql">Any SQL statement</param>
+        /// <returns>Returns the number of rows affected or -1 on error</returns>
+        public int Execute(string sql)
+        {
+            if (this.dbConnection == null)
+            {
+                this.Open();
+            }
+            try
+            {
+                this.cmd.CommandText = sql;
+                this.cmd.Connection = dbConnection;
+                return this.cmd.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                return -1;                
+            }
+        }
+
         public DataTable Query(string pSql)
         {
             if (this.dbConnection == null)
