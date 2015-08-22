@@ -2,10 +2,12 @@
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Norplan.Adm.AsBuiltDataConversion.TypeExtensions;
 
 namespace Norplan.Adm.AsBuiltDataConversion
 {
@@ -105,6 +107,64 @@ namespace Norplan.Adm.AsBuiltDataConversion
         {
             if (IsValid)
             {
+                var roadIdsToBeDeleted = new List<int>();
+
+                var roadTable = AccessDatabase.Query("SELECT ADRROADID FROM ADM_ADRROAD");
+
+                var roadCounter = 0;
+
+                var numberOfRoads = roadTable.Rows.Count;
+
+                foreach (DataRow roadRow in roadTable.Rows)
+                {
+                    int currentRoadId = roadRow["ADRROADID"].AsInteger();
+
+                    OgrLayer.ResetReading();
+                    OgrLayer.SetAttributeFilter("ADRROADID=" + currentRoadId);
+
+                    using (Feature roadSegment = OgrLayer.GetNextFeature())
+                    {
+                        if (roadSegment == null)
+                        {
+                            roadIdsToBeDeleted.Add(currentRoadId);
+                        }
+                    }
+
+                    roadCounter++;
+
+                    if (roadCounter % 100 == 0 || roadCounter == numberOfRoads)
+                    {
+                        Log("Processed " +  roadCounter + " roads", true);
+                    }
+
+                }
+
+                int numberOfRoadsToBeDeleted = roadIdsToBeDeleted.Count();
+                int deletedRoads = 0;
+                foreach (int roadIdToDelete in roadIdsToBeDeleted)
+                {
+                    deletedRoads++;
+                    var sql = "DELETE * FROM ADM_ADRROAD WHERE ADRROADID = " + roadIdToDelete;
+                    
+                    int affectedRoads = AccessDatabase.Execute(sql);
+                    
+                    if (affectedRoads > -1)
+                    {
+                        Log(roadIdToDelete.ToString(), true);
+                    }
+                    else
+                    {
+                        Log(sql, true);
+                    }
+
+                    if (deletedRoads % 100 == 0 || deletedRoads == numberOfRoadsToBeDeleted)
+                    {
+                        Log("Deleted " + deletedRoads + " roads...", true);
+                    }
+
+                }
+
+                LogFunction("Deleted " + roadIdsToBeDeleted.Count() + " road entries without corresponding geometries", true);
 
             }
         }
@@ -113,7 +173,8 @@ namespace Norplan.Adm.AsBuiltDataConversion
         {
             if (IsValid)
             {
-
+                int affectedRows = AccessDatabase.Execute("UPDATE ADM_ADRROAD SET NAMEENGLISH = '', NAMEARABIC='', NAMEPOPULARENGLISH='', NAMEPOPULARARABIC='' WHERE APPROVED IS NULL OR APPROVED = 0");
+                LogFunction("Blanked names of roads that are not yet approved", true);
             }
         }
 
