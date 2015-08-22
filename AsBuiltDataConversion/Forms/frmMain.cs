@@ -1014,7 +1014,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             }
             catch (Exception ex)
             {
-                Log("Operation aborted: " + ex.Message);                
+                Log("Operation aborted: " + ex.Message);
                 throw;
             }
         }
@@ -1038,18 +1038,24 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         private void cleanMainAddressingDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dlgOpenMdbFile.FileName = "*.mdb";
-            dlgOpenMdbFile.Filter = "ESRI Personal Geodatabase/Access file|*.mdb";
             dlgOpenMdbFile.Title = "Please select a copy of the addressing geodatabase (adm-adr.mdb)";
+            dlgOpenMdbFile.FileName = "*.mdb";
+            dlgOpenMdbFile.Filter = "ESRI Personal Geodatabase file|*.mdb";
+
             if (dlgOpenMdbFile.ShowDialog() != DialogResult.OK)
             {
                 Log("Please select a filename");
                 return;
             }
 
-            using (AdmAdrCleaner mCleaner = new AdmAdrCleaner(dlgOpenMdbFile.FileName, Log))
+            using (AdmAdrCleaner dataCleaner = new AdmAdrCleaner(dlgOpenMdbFile.FileName, Log))
             {
-                Log("Ready to work");
+                Log("Starting cleaning");
+                dataCleaner.RemoveNullGeometries();
+                dataCleaner.RemoveDuplicates();
+                dataCleaner.RemoveOverlappingGeometries();
+                dataCleaner.BlankNamesWhereNotApproved();
+                Log("Done");
             }
         }
 
