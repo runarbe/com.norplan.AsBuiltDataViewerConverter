@@ -30,5 +30,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.DataTypes
             this.Messages.Add(pMessage);
         }
 
+        public string GetMessages()
+        {
+            return String.Join(Environment.NewLine, this.Messages);
+        }
+
     }
 }
