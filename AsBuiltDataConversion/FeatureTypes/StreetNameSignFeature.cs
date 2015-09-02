@@ -19,14 +19,14 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             // Set feature type
             FeatureType = DotSpatial.Topology.FeatureType.Point;
             AddCol("STREETNAMESIGNID", typeof(int));
-            AddCol("QR_CODE", typeof(string));
-            AddCol("SIGNTYPE", typeof(string));
-            AddCol("AUNRANGE_P1", typeof(string));
+            AddCol("QR_CODE", typeof(string), 500);
+            AddCol("SIGNTYPE", typeof(string), 50);
+            AddCol("AUNRANGE_P1", typeof(string), 200);
             AddCol("ROADID_P1", typeof(int));
-            AddCol("DISTRICTID_P1", typeof(string));
-            AddCol("AUNRANGE_P2", typeof(string));
+            AddCol("DISTRICTID_P1", typeof(string), 100);
+            AddCol("AUNRANGE_P2", typeof(string), 200);
             AddCol("ROADID_P2", typeof(int));
-            AddCol("DISTRICTID_P2", typeof(string));
+            AddCol("DISTRICTID_P2", typeof(string), 100);
         }
 
         public FeatureSet PopulateFromTable()
