@@ -10,8 +10,42 @@ using System.Diagnostics;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
+    /// <summary>
+    /// Re-usable class for adding update checking to an application
+    /// </summary>
     class UpdateCheck
     {
+        /// <summary>
+        /// The URL the service will check against to look for updates
+        /// </summary>
+        public string UpdateCheckURL { get; set; }
+
+        /// <summary>
+        /// A flag determining whether the UpdateCheckURL is valid or not
+        /// </summary>
+        public bool IsValid { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="updateCheckURL">
+        /// Complete URL to folder containing setup files
+        /// and update.php script without trailing slash
+        /// </param>
+        public UpdateCheck(string updateCheckURL)
+        {
+            UpdateCheckURL = updateCheckURL;
+
+            if (Uri.IsWellFormedUriString(updateCheckURL, UriKind.Absolute))
+            {
+                IsValid = true;
+            }
+            else
+            {
+                IsValid = false;
+            }
+
+        }
 
         public static bool HasInternetConnection()
         {
@@ -27,7 +61,6 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 {
                     return true;
                 }
-
             }
             catch (Exception ex)
             {
@@ -42,61 +75,71 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             return typeof(UpdateCheck).Assembly.GetName().Version.ToString();
         }
 
-        public static void CheckForUpdates(Action<string, bool> logFunction)
+        public void CheckForUpdates(Action<string, bool> logFunction)
         {
-            if (HasInternetConnection())
+            if (IsValid)
             {
-                logFunction("Checking for version newer than " + GetCurrentVersion(), true);
-
-                using (var webClient = new WebClient())
+                if (HasInternetConnection())
                 {
-                    var mJsonString = webClient.DownloadString("http://myabudhabi.net/latest/version.php?v=" + GetCurrentVersion());
-                    try
+                    logFunction("Checking for version newer than " + GetCurrentVersion(), true);
+
+                    using (var webClient = new WebClient())
                     {
-                        var mJson = JsonConvert.DeserializeObject<UpdateResponse>(mJsonString);
-                        if (mJson.Status == 1)
+                        var mJsonString = webClient.DownloadString(UpdateCheckURL + "/version.php?v=" + GetCurrentVersion());
+                        try
                         {
-                            logFunction("An update is available at the web address http://myabudhabi.net/latest", true);
-
-                            var dlgSaveFile = new SaveFileDialog();
-                            dlgSaveFile.Title = "Please select a location to download the file";
-                            dlgSaveFile.Filter = "Executable files|*.exe";
-                            dlgSaveFile.FileName = mJson.File.FileName;
-
-                            if (MessageBox.Show("Would you like to download the update?", mJson.Message, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            var mJson = JsonConvert.DeserializeObject<UpdateResponse>(mJsonString);
+                            if (mJson.Status == 1)
                             {
-                                if (dlgSaveFile.ShowDialog() != DialogResult.OK)
+                                logFunction("An update is available at the web address http://myabudhabi.net/latest", true);
+
+                                var dlgSaveFile = new SaveFileDialog();
+                                dlgSaveFile.Title = "Please select a location to download the file";
+                                dlgSaveFile.Filter = "Executable files|*.exe";
+                                dlgSaveFile.FileName = mJson.File.FileName;
+
+                                if (MessageBox.Show("Would you like to download the update?", mJson.Message, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
-                                    logFunction("Please select a download location for the update", true);
+                                    if (dlgSaveFile.ShowDialog() != DialogResult.OK)
+                                    {
+                                        logFunction("Please select a download location for the update", true);
+                                    }
+
+                                    logFunction("Downloading, please wait it may take some minutes...", true);
+                                    webClient.DownloadFile("http://myabudhabi.net/latest/files/" + mJson.File.FileName, dlgSaveFile.FileName);
+                                    logFunction("Download complete, saved file to: " + dlgSaveFile.FileName, true);
+                                    logFunction("Please exit the application and execute the setup file to upgrade", true);
                                 }
+                                logFunction("Operation complete", true);
+
                             }
-
-                            logFunction("Downloading, please wait it may take some minutes...", true);
-                            webClient.DownloadFile("http://myabudhabi.net/latest/files/" + mJson.File.FileName, dlgSaveFile.FileName);
-                            logFunction("Download complete, saved file to: " + dlgSaveFile.FileName, true);
-                            logFunction("Please exit the application and execute the setup file to upgrade", true);
-                            logFunction("Operation complete", true);
-
+                            else
+                            {
+                                logFunction("No update is available", true);
+                            }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            logFunction("No update is available", true);
+                            logFunction("An error occured while parsing response from update service", false);
+                            logFunction(ex.Message, true);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        logFunction("An error occured while parsing response from update service", false);
-                        logFunction(ex.Message, true);
-                    }
+                }
+                else
+                {
+                    logFunction("You do not appear to be connected to the Internet", true);
                 }
             }
             else
             {
-                logFunction("You do not appear to be connected to the Internet", true);
+                logFunction("The update check URL is not valid: " + UpdateCheckURL, true);
             }
 
         }
 
+        /// <summary>
+        /// Data about one setup file, always wrapped inside an UpdateResponse
+        /// </summary>
         public class SetupFile
         {
             public string FileName;
@@ -120,6 +163,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             }
         }
 
+        /// <summary>
+        /// Response from update service, contains a SetupFile object
+        /// </summary>
         public class UpdateResponse
         {
             public int Status;
