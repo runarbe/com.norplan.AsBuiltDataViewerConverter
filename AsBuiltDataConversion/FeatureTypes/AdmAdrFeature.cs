@@ -41,8 +41,14 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             return this.dbx.Query(pSqlStatement);
         }
 
-        protected bool AddCol(string pFieldName, Type pType) {
-            this.DataTable.Columns.Add(new DataColumn(pFieldName, pType));
+        protected bool AddCol(string fieldName, Type fieldType, int? fieldWidth = null)
+        {
+            var dataCol = new DataColumn(fieldName, fieldType);
+            if (fieldWidth != null && fieldType == typeof(string))
+            {
+                dataCol.MaxLength = (int)fieldWidth;
+            }
+            this.DataTable.Columns.Add(dataCol);
             return true;
         }
 
