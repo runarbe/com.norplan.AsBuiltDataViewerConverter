@@ -19,11 +19,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             // Set feature type
             this.FeatureType = DotSpatial.Topology.FeatureType.Point;
             AddCol("ADDRESSGUIDESIGNID", typeof(int));
-            AddCol("QR_CODE", typeof(string));
-            AddCol("SIGNTYPE", typeof(string));
-            AddCol("AUNRANGE", typeof(string));
+            AddCol("QR_CODE", typeof(string), 500);
+            AddCol("SIGNTYPE", typeof(string), 50);
+            AddCol("AUNRANGE", typeof(string), 200);
             AddCol("ROADID", typeof(int));
-            AddCol("DISTRICTID", typeof(string));
+            AddCol("DISTRICTID", typeof(string), 100);
         }
 
 
