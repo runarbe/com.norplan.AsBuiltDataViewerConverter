@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;   
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Norplan.Adm.AsBuiltDataConversion.DataTypes;
@@ -12,6 +12,7 @@ using Norplan.Adm.AsBuiltDataConversion.FeatureTypes;
 using System.Windows.Forms;
 using DotSpatial.Controls;
 using System.IO;
+using System.Diagnostics;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
@@ -110,7 +111,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <remarks>
         /// Presently implements special functions for KML that perhaps should be kept separate.
         /// </remarks>
-        public static ReturnValue ExportFeatureLayerToOGR(string pDrvNm, IFeatureLayer pFLyr, string pOPFn, ProjectionInfo pSrcProj, ProjectionInfo pTgtProj, bool pHasTitle = false, string pTitleFieldNames = "", string pTitleFormat = "", List<string> pLCOpts = null, List<string> pDSCOpts = null, Dictionary<string, string> pFieldMap = null, bool pOnlyInFieldMap = false, bool pAppend = false)
+        public static ReturnValue ExportFeatureLayerToOGR(
+            string pDrvNm, IFeatureLayer pFLyr,
+            string pOPFn, ProjectionInfo pSrcProj,
+            ProjectionInfo pTgtProj,
+            bool pHasTitle = false,
+            string pTitleFieldNames = "",
+            string pTitleFormat = "",
+            List<string> pLCOpts = null,
+            List<string> pDSCOpts = null,
+            Dictionary<string, string> pFieldMap = null,
+            bool pOnlyInFieldMap = false, bool pAppend = false)
         {
 
             var mReturnValue = new ReturnValue(true);
@@ -202,7 +213,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             var mDataSourceFieldNames = new List<string>();
 
             // Loop through all the fields
-            foreach (DataColumn mDataColumn in pFLyr.DataSet.GetColumns())
+            foreach (DataColumn mDataColumn in pFLyr.DataSet.DataTable.Columns)
             {
                 var mColType = DataTypeToOgrFieldType(mDataColumn.DataType);
                 var mNewField = new FieldDefn(MapFieldName(mDataColumn.ColumnName, pFieldMap), mColType);
@@ -302,8 +313,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     mFeature.SetField(MapFieldName(TitleFieldName, pFieldMap), Utilities.GetANSI(mTitleValue));
                 }
 
-                // Create the feature
-                l.CreateFeature(mFeature);
+                // Create the feature            
+                try
+                {
+                    l.CreateFeature(mFeature);
+
+                }
+                catch (Exception ex)
+                {
+                    mReturnValue.AddMessage(ex.Message);
+                    mReturnValue.AddMessage("Tip: A datasource may appear read-only if the file location is inside a dropbox folder and the dropbox application is running");
+                }
             }
 
             if (mTransformRequired)
