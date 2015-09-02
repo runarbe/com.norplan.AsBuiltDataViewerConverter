@@ -21,31 +21,31 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             // Set feature type
             this.FeatureType = DotSpatial.Topology.FeatureType.Point;
             // ADDRESSUNITID
-            this.DataTable.Columns.Add(new DataColumn("ADDRESSUNITID", typeof(int)));
+            this.AddCol("ADDRESSUNITID", typeof(int));
             // ROADID
-            this.DataTable.Columns.Add(new DataColumn("ROADID", typeof(int)));
+            this.AddCol("ROADID", typeof(int));
             // AREA ABBREVIATION
-            this.DataTable.Columns.Add(new DataColumn("DISTRICTID", typeof(string)));
+            this.AddCol("DISTRICTID", typeof(string), 100);
             // ADDRESSUNITNR
-            this.DataTable.Columns.Add(new DataColumn("ADDRESSUNITNR", typeof(string)));
+            this.AddCol("ADDRESSUNITNR", typeof(string), 15);
             // ROADNAME_EN
-            this.DataTable.Columns.Add(new DataColumn("ROADNAME_EN", typeof(string)));
+            this.AddCol("ROADNAME_EN", typeof(string), 200);
             // ROADNAME_AR
-            this.DataTable.Columns.Add(new DataColumn("ROADNAME_AR", typeof(string)));
+            this.AddCol("ROADNAME_AR", typeof(string), 200);
             // ROADNAME_POP_EN
-            this.DataTable.Columns.Add(new DataColumn("ROADNAME_POP_EN", typeof(string)));
+            this.AddCol("ROADNAME_POP_EN", typeof(string), 200);
             // ROADNAME_POP_AR
-            this.DataTable.Columns.Add(new DataColumn("ROADNAME_POP_AR", typeof(string)));
+            this.AddCol("ROADNAME_POP_AR", typeof(string),200);
             // DISTRICT_EN
-            this.DataTable.Columns.Add(new DataColumn("DISTRICT_EN", typeof(string)));
+            this.AddCol("DISTRICT_EN", typeof(string), 200);
             // DISTRICT_AR
-            this.DataTable.Columns.Add(new DataColumn("DISTRICT_AR", typeof(string)));
+            this.AddCol("DISTRICT_AR", typeof(string), 200);
             // MUNICIPALITY_EN
-            this.DataTable.Columns.Add(new DataColumn("MUNICIPALITY_EN", typeof(string)));
+            this.AddCol("MUNICIPALITY_EN", typeof(string), 100);
             // MUNICIPALITY_AR
-            this.DataTable.Columns.Add(new DataColumn("MUNICIPALITY_AR", typeof(string)));
+            this.AddCol("MUNICIPALITY_AR", typeof(string), 100);
             // QR-CODE
-            this.DataTable.Columns.Add(new DataColumn("QR_CODE", typeof(string)));
+            this.AddCol("QR_CODE", typeof(string), 500);
         }
 
         public FeatureSet PopulateFromTable()
