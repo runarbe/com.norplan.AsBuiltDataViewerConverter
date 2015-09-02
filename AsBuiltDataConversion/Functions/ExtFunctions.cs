@@ -88,21 +88,21 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         /// <param name="pType">Any C# type</param>
         /// <returns>Corresponding OGR type</returns>
-        public static OSGeo.OGR.FieldType DataTypeToOgrFieldType(Object pType)
+        public static OSGeo.OGR.FieldType DataTypeToOgrFieldType(Type pType)
         {
-            if (pType is string)
+            if (pType == typeof(string))
             {
                 return OSGeo.OGR.FieldType.OFTString;
             }
-            else if (pType is int)
+            else if (pType == typeof(int))
             {
                 return OSGeo.OGR.FieldType.OFTInteger;
             }
-            else if (pType is double || pType is decimal || pType is float)
+            else if (pType == typeof( double) || pType == typeof( decimal) || pType == typeof( float))
             {
                 return OSGeo.OGR.FieldType.OFTReal;
             }
-            else if (pType is DateTime)
+            else if (pType == typeof( DateTime))
             {
                 return OSGeo.OGR.FieldType.OFTDateTime;
             }
