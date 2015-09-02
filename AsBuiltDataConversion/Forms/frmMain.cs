@@ -383,18 +383,25 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
                 if (null != (mOutputFilename = SelectOutputFilename(null, mLayer.LegendText, "File GDB|*.gdb")))
                 {
-                    ExtFunctions.ExportFeatureLayerToOGR(
+                    var mReturnValue = ExtFunctions.ExportFeatureLayerToOGR(
                         pDrvNm: "FileGDB",
                         pFLyr: (IFeatureLayer)theMap.Layers.SelectedLayer,
                         pOPFn: dlgSaveFile.FileName,
                         pSrcProj: theMap.Projection,
                         pTgtProj: ExtFunctions.GetProjByEPSG(32640),
                         pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" });
+
+                    Log(mReturnValue.GetMessages());
+                    Log("Operation completed");
+                }
+                else
+                {
+                    Log("Operation cancelled: No output FileGDB name specified");
                 }
             }
             else
             {
-                Utilities.LogDebug("No layer selected");
+                Log("Operation cancelled: No layer selected");
             }
         }
 
@@ -1028,7 +1035,11 @@ namespace Norplan.Adm.AsBuiltDataConversion
         {
             try
             {
-                UpdateCheck.CheckForUpdates(Log);
+                var updateCheck = new UpdateCheck("http://myabudhabi.net/latest");
+                if (updateCheck.IsValid)
+                {
+                    updateCheck.CheckForUpdates(Log);
+                }
             }
             catch (Exception ex)
             {
@@ -1058,6 +1069,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 Log("Done");
             }
         }
+
 
     }
 }

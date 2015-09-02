@@ -50,6 +50,7 @@
             this.importRoadsAndRoadCenterLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importAddressingDistrictsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanMainAddressingDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.identifyRoadDefinitionSuspectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -106,7 +107,6 @@
             this.dlgOpenMdbFile = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectDBs = new System.Windows.Forms.OpenFileDialog();
             this.dlgSelectFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.cleanMainAddressingDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theMapToolbar.SuspendLayout();
             this.theMenuStrip.SuspendLayout();
             this.theStatusStrip.SuspendLayout();
@@ -345,6 +345,13 @@
             this.importAddressingDistrictsToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
             this.importAddressingDistrictsToolStripMenuItem.Text = "Import addressing districts";
             this.importAddressingDistrictsToolStripMenuItem.Click += new System.EventHandler(this.importAddressingDistrictsToolStripMenuItem_Click);
+            // 
+            // cleanMainAddressingDatabaseToolStripMenuItem
+            // 
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Name = "cleanMainAddressingDatabaseToolStripMenuItem";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Text = "Clean main addressing database";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Click += new System.EventHandler(this.cleanMainAddressingDatabaseToolStripMenuItem_Click);
             // 
             // cleanFileGDBStreetAndDistrictNamesToolStripMenuItem
             // 
@@ -861,13 +868,6 @@
             this.dlgSelectDBs.FileName = "openFileDialog1";
             this.dlgSelectDBs.Filter = "Access databases|*.accdb";
             this.dlgSelectDBs.Multiselect = true;
-            // 
-            // cleanMainAddressingDatabaseToolStripMenuItem
-            // 
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Name = "cleanMainAddressingDatabaseToolStripMenuItem";
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Text = "Clean main addressing database";
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Click += new System.EventHandler(this.cleanMainAddressingDatabaseToolStripMenuItem_Click);
             // 
             // frmMain
             // 
