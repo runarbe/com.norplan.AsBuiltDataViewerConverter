@@ -946,6 +946,9 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 IFeatureLayer mLayer;
                 string mDistrictsShapefile = Application.StartupPath + "/GisData/districts.shp";
 
+                // Empty the list of processed QR-codes
+                QRLib.ResetQRCodes();
+
                 var mQrTestResults = new List<QrTestResult>();
 
                 if (null == (mLayer = ExtFunctions.GetSelectedPointLayer(theMap)))
@@ -983,13 +986,15 @@ namespace Norplan.Adm.AsBuiltDataConversion
                             if (mFeature.FeatureType == FeatureType.Point)
                             {
                                 DotSpatial.Topology.Point mPoint = (DotSpatial.Topology.Point)mFeature.BasicGeometry;
-                                var mResult = mQRCode.TestQRCode(mDistrictsShapefile, false, mPoint.X, mPoint.Y);
+                                var mResult = mQRCode.TestQRCode(mDistrictsShapefile, false, mPoint.X, mPoint.Y, true);
                                 Log(mResult);
                                 mQrTestResults.Add(mResult);
                             }
                             else
                             {
-                                var mResult = mQRCode.TestQRCode(mDistrictsShapefile);
+                                var mResult = mQRCode.TestQRCode(
+                                    districtsShapefile: mDistrictsShapefile,
+                                    checkForDuplicates: true);
                                 Log(mResult);
                                 mQrTestResults.Add(mResult);
                             }
