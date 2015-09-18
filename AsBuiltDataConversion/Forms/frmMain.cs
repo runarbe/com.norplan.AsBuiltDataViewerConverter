@@ -987,7 +987,10 @@ namespace Norplan.Adm.AsBuiltDataConversion
                             {
                                 DotSpatial.Topology.Point mPoint = (DotSpatial.Topology.Point)mFeature.BasicGeometry;
                                 var mResult = mQRCode.TestQRCode(mDistrictsShapefile, false, mPoint.X, mPoint.Y, true);
-                                Log(mResult);
+                                if (mResult.HasIssue)
+                                {
+                                    Log(mResult);
+                                }
                                 mQrTestResults.Add(mResult);
                             }
                             else
@@ -1005,6 +1008,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
                     using (var mCsvWriter = new CsvHelper.CsvWriter(new ExcelSerializer(dlgSaveFile.FileName)))
                     {
                         mCsvWriter.WriteRecords(mQrTestResults);
+                        Log("Processed " + mQrTestResults.Count + " records...");
                         Log("Wrote output to " + dlgSaveFile.FileName + "...");
                         Log("Operation completed");
                     }
