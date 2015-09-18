@@ -20,6 +20,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             FeatureType = DotSpatial.Topology.FeatureType.Point;
             AddCol("STREETNAMESIGNID", typeof(int));
             AddCol("QR_CODE", typeof(string), 500);
+            AddCol("SERIALNUMBER", typeof(string), 50);
             AddCol("SIGNTYPE", typeof(string), 50);
             AddCol("AUNRANGE_P1", typeof(string), 200);
             AddCol("ROADID_P1", typeof(int));
@@ -47,6 +48,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
 
                     mF["STREETNAMESIGNID"] = mRow["id"];
                     mF["QR_CODE"] = this.GetQRCode(mRow, pTable);
+                    mF["SERIALNUMBER"] = mRow["serialNumberOfSign"];
                     mF["SIGNTYPE"] = mRow["signType"];
                     mF["AUNRANGE_P1"] = mRow["addressUnitRange_p1"];
                     mF["ROADID_P1"] = mRow["road_id_p1"];
