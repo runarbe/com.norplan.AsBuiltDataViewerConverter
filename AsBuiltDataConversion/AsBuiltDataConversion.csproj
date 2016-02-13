@@ -213,6 +213,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTypes\DistrictImport.cs" />
+    <Compile Include="DataTypes\SignType.cs" />
     <Compile Include="DataTypes\GeoObjects.cs" />
     <Compile Include="DataTypes\CbVal.cs" />
     <Compile Include="DataTypes\ReturnValue.cs" />

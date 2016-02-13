@@ -12,7 +12,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
     public class RetVal
     {
-        RetValStatus status = RetValStatus.success;
+        public RetValStatus status = RetValStatus.success;
         String msg = "";
 
         public RetVal(RetValStatus pStatus, Object pObj, String pMsg = null)
@@ -23,5 +23,18 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             }
             return;
         }
+
+        public RetVal Failure()
+        {
+            this.status = RetValStatus.failure;
+            return this;
+        }
+
+        public RetVal Success()
+        {
+            this.status = RetValStatus.success;
+            return this;
+        }
+
     }
 }

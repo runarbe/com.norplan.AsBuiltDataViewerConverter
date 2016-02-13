@@ -939,7 +939,6 @@
         private System.Windows.Forms.ToolStripButton toolZoomOut;
         private System.Windows.Forms.StatusStrip theStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
-        private System.Windows.Forms.ToolStripProgressBar pgBar;
         private System.Windows.Forms.ToolStripButton btnZoomFullExtent;
         private System.Windows.Forms.DataGridView theDataGridView;
         private System.Windows.Forms.ToolStripButton btnOpenFile;
@@ -1003,6 +1002,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanMainAddressingDatabaseToolStripMenuItem;
+        public System.Windows.Forms.ToolStripProgressBar pgBar;
     }
 }
 

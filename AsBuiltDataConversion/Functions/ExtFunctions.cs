@@ -40,6 +40,48 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             return (pFieldMap != null && pFieldMap.Keys.Contains(pFieldName)) ? pFieldMap[pFieldName] : pFieldName;
         }
 
+        public static List<String> GetDistrictByPoint(this IMapLayer pLyr, double x, double y)
+        {
+            var mNameEN = "";
+            var mNameAR = "";
+
+            if (pLyr.LegendText == "Districts")
+            {
+                var mPoint = new DotSpatial.Topology.Point(x, y);
+
+                var tLyr = (IFeatureLayer)pLyr;
+
+                foreach (DotSpatial.Data.Feature mF in tLyr.DataSet.Features)
+                {
+                    if (mF.Contains(mPoint))
+                    {
+                        mNameEN = mF.DataRow["NAMELATIN"].ToString();
+                        mNameAR = mF.DataRow["NAMEARABIC"].ToString();
+                        break;
+                    }
+                }
+            }
+            return new List<String>() { mNameEN, mNameAR };
+        }
+
+        /// <summary>
+        /// Get layer currently loaded in map by its name (as shown in the legend)
+        /// </summary>
+        /// <param name="pMap"></param>
+        /// <param name="pLayerName"></param>
+        /// <returns></returns>
+        public static IMapLayer GetLayerByName(Map pMap, String pLayerName)
+        {
+            foreach (IMapLayer mLyr in pMap.Layers)
+            {
+                if (mLyr.LegendText == pLayerName)
+                {
+                    return mLyr;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Get the selected layer from the map or null if no layer is selected
         /// </summary>
@@ -98,11 +140,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             {
                 return OSGeo.OGR.FieldType.OFTInteger;
             }
-            else if (pType == typeof( double) || pType == typeof( decimal) || pType == typeof( float))
+            else if (pType == typeof(double) || pType == typeof(decimal) || pType == typeof(float))
             {
                 return OSGeo.OGR.FieldType.OFTReal;
             }
-            else if (pType == typeof( DateTime))
+            else if (pType == typeof(DateTime))
             {
                 return OSGeo.OGR.FieldType.OFTDateTime;
             }
@@ -244,8 +286,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         {
             if (pFrm.satellite == null)
             {
-                pFrm.satellite = BruTileLayer.CreateBingAerialLayer();
-                pFrm.satellite.LegendText = "Bing (Satellite)";
+                pFrm.satellite = BruTileLayer.CreateOsmLayer();
+                //pFrm.satellite = BruTileLayer.CreateBingAerialLayer();
+                pFrm.satellite.LegendText = "OSM Tile Layer";
             }
 
             ILayer mLandLayer = null;
@@ -685,6 +728,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             pPgBar.Value = ctr1;
             foreach (DataRow mRow in mDataTable.Rows)
             {
+                if (mDistrictNames.Keys.Contains(mRow["ABBREVIATION"].ToString()))
+                {
+                    throw new Exception("Key " + mRow["ABBREVIATION"].ToString() + " already exists in districts");
+                }
                 mDistrictNames.Add(mRow["ABBREVIATION"].ToString(), mRow);
                 ctr1++;
                 if (ctr1 % 100 == 0)

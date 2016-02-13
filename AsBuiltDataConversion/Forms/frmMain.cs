@@ -883,7 +883,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             dlgSaveFile.FileName = "myabudhabi.net.sql";
             if (dlgSaveFile.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
 
-            ExtFunctions.ExportFileGDBToMyAbuDhabiDotNetSQL(this, dlgSelectFolder.SelectedPath, "Address_unit_signs", dlgSaveFile.FileName, 25);
+            ExtFunctions.ExportFileGDBToMyAbuDhabiDotNetSQL(this, dlgSelectFolder.SelectedPath, dlgSaveFile.FileName, 25,false);
 
             Log("Completed process");
         }
@@ -900,7 +900,11 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 {
                     var mDistrictsFeatureSet = ExtFunctions.GetDistrictsFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 0);
                     var mDistrictsLayer = ExtFunctions.GetFeatureLayer(theMap.Layers, mDistrictsFeatureSet, "Districts", MapSymbols.PolygonSymbol(Color.Transparent, Color.Red), KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
-                    var f = mDistrictsFeatureSet.GetFeature(1);
+                   
+                    // Exeport districts to shapefile
+                    mDistrictsLayer.DataSet.SaveAs(Application.StartupPath + "/GisData/districts.shp", true);
+                    Properties.Settings.Default.DistrictFilePresent = true;
+                    Properties.Settings.Default.DistrictImportFileDate = DateTime.Now;
                     mDistrictsLayer.Reproject(theMap.Projection);
                     theMap.Refresh();
                     Log("Operation completed");
@@ -1078,7 +1082,6 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 Log("Done");
             }
         }
-
 
     }
 }
