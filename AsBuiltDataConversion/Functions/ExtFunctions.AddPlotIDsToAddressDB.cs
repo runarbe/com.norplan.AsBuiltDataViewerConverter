@@ -10,11 +10,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
     partial class ExtFunctions
     {
         /// <summary>
-        /// Transfers attributes from plot layer to address unit layer based on spatial intersection
+        /// Transfers fieldAttributes from plot layer to address unit layer based on spatial intersection
         /// </summary>
         /// <param name="pFrm">The main application form</param>
-        /// <param name="pTargetFileGDB">The filename of a FileGDB with addressing data</param>
-        /// <param name="pSrcShapefile">The filename of a Shapefile with plot polygons</param>
+        /// <param name="pTargetFileGDB">The outputShapefileName of fieldAttributes FileGDB with addressing data</param>
+        /// <param name="pSrcShapefile">The outputShapefileName of fieldAttributes Shapefile with plot polygons</param>
         /// <param name="pFldsToCopy">A dictionary of source=>target field names</param>
         /// <param name="pMatchColPrefix">The prefix to assign to the match column</param>
         /// <param name="pBufSteps">An array of buffer steps</param>

@@ -3,19 +3,19 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
+// set of fieldAttributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("As-Built Data Viewer and Converter")]
-[assembly: AssemblyDescription("Tool to be used for viewing and converting As-Built data resulting from the Abu Dhabi Addressing System Project")]
+[assembly: AssemblyDescription("Tool to be used for viewing and converting addressing data")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NORPLAN AS")]
 [assembly: AssemblyProduct("As-Built Data Viewer and Converter")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2011, NORPLAN AS, All rights reserved")]
 [assembly: AssemblyTrademark("NORPLAN AS")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
+// to COM components.  If you need to access fieldAttributes type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.1.*")]

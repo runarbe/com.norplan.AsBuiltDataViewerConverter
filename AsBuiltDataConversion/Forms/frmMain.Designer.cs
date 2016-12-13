@@ -40,6 +40,7 @@
             this.btnOpenFile = new System.Windows.Forms.ToolStripButton();
             this.btnPrintLayout = new System.Windows.Forms.ToolStripButton();
             this.btnToggleSatelliteImagery = new System.Windows.Forms.ToolStripButton();
+            this.btnTest = new System.Windows.Forms.ToolStripButton();
             this.theMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,17 +48,20 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.getRandomSelectionOfSignsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateQRcodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importAddressingDistrictsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cleanMainAddressingDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.importAddressingDistrictsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importZoneSectorAndPlotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addPlotIDsToFGDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.testQRCodesOfSelectedLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanMainAddressingDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addPlotIDsToFGDBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addGoogleSatelliteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +76,8 @@
             this.exportSelectedDatabasesToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLforMyabudhabinetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileGDBforADMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportSelectedFileGDBToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sQLforMyAbuDhabinetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -151,12 +157,13 @@
             this.btnZoomFullExtent,
             this.btnOpenFile,
             this.btnPrintLayout,
-            this.btnToggleSatelliteImagery});
+            this.btnToggleSatelliteImagery,
+            this.btnTest});
             this.theMapToolbar.Location = new System.Drawing.Point(3, 28);
             this.theMapToolbar.Margin = new System.Windows.Forms.Padding(3);
             this.theMapToolbar.Name = "theMapToolbar";
             this.theMapToolbar.Padding = new System.Windows.Forms.Padding(2);
-            this.theMapToolbar.Size = new System.Drawing.Size(267, 35);
+            this.theMapToolbar.Size = new System.Drawing.Size(308, 35);
             this.theMapToolbar.TabIndex = 9;
             this.theMapToolbar.Text = "toolBar";
             this.theMapToolbar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolBar_ItemClicked);
@@ -252,6 +259,16 @@
             this.btnToggleSatelliteImagery.Text = "Satellite Imagery";
             this.btnToggleSatelliteImagery.Click += new System.EventHandler(this.btnToggleSatelliteImagery_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnTest.Image = ((System.Drawing.Image)(resources.GetObject("btnTest.Image")));
+            this.btnTest.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(41, 28);
+            this.btnTest.Text = "Exp!";
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // theMenuStrip
             // 
             this.theMenuStrip.Dock = System.Windows.Forms.DockStyle.None;
@@ -290,17 +307,20 @@
             this.toolStripSeparator1,
             this.getRandomSelectionOfSignsToolStripMenuItem,
             this.generateQRcodesToolStripMenuItem,
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem,
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem,
-            this.importAddressingDistrictsToolStripMenuItem,
-            this.cleanMainAddressingDatabaseToolStripMenuItem,
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem,
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem,
             this.toolStripSeparator2,
+            this.importAddressingDistrictsToolStripMenuItem,
             this.importZoneSectorAndPlotsToolStripMenuItem,
-            this.addPlotIDsToFGDBToolStripMenuItem,
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem,
             this.toolStripSeparator3,
-            this.testQRCodesOfSelectedLayerToolStripMenuItem});
+            this.testQRCodesOfSelectedLayerToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem,
+            this.cleanMainAddressingDatabaseToolStripMenuItem,
+            this.addPlotIDsToFGDBToolStripMenuItem,
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem,
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "&Tools";
@@ -309,94 +329,111 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(374, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(653, 6);
             // 
             // getRandomSelectionOfSignsToolStripMenuItem
             // 
             this.getRandomSelectionOfSignsToolStripMenuItem.Name = "getRandomSelectionOfSignsToolStripMenuItem";
-            this.getRandomSelectionOfSignsToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.getRandomSelectionOfSignsToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
             this.getRandomSelectionOfSignsToolStripMenuItem.Text = "Generate random sample from selected layer";
             this.getRandomSelectionOfSignsToolStripMenuItem.Click += new System.EventHandler(this.getRandomSelectionOfSignsToolStripMenuItem_Click);
             // 
             // generateQRcodesToolStripMenuItem
             // 
             this.generateQRcodesToolStripMenuItem.Name = "generateQRcodesToolStripMenuItem";
-            this.generateQRcodesToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.generateQRcodesToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
             this.generateQRcodesToolStripMenuItem.Text = "Generate QR-codes";
             this.generateQRcodesToolStripMenuItem.Click += new System.EventHandler(this.generateQRcodesToolStripMenuItem_Click);
-            // 
-            // importRoadsAndRoadCenterLinesToolStripMenuItem
-            // 
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Name = "importRoadsAndRoadCenterLinesToolStripMenuItem";
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Text = "Import roads and road center lines";
-            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Click += new System.EventHandler(this.importRoadsAndRoadCenterLinesToolStripMenuItem_Click);
-            // 
-            // exportFileGDBToMyabudhabinetSQLToolStripMenuItem
-            // 
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Name = "exportFileGDBToMyabudhabinetSQLToolStripMenuItem";
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Text = "Export FileGDB to myabudhabi.net SQL";
-            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Click += new System.EventHandler(this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem_Click);
-            // 
-            // importAddressingDistrictsToolStripMenuItem
-            // 
-            this.importAddressingDistrictsToolStripMenuItem.Name = "importAddressingDistrictsToolStripMenuItem";
-            this.importAddressingDistrictsToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.importAddressingDistrictsToolStripMenuItem.Text = "Import addressing districts";
-            this.importAddressingDistrictsToolStripMenuItem.Click += new System.EventHandler(this.importAddressingDistrictsToolStripMenuItem_Click);
-            // 
-            // cleanMainAddressingDatabaseToolStripMenuItem
-            // 
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Name = "cleanMainAddressingDatabaseToolStripMenuItem";
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Text = "Clean main addressing database";
-            this.cleanMainAddressingDatabaseToolStripMenuItem.Click += new System.EventHandler(this.cleanMainAddressingDatabaseToolStripMenuItem_Click);
-            // 
-            // cleanFileGDBStreetAndDistrictNamesToolStripMenuItem
-            // 
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Name = "cleanFileGDBStreetAndDistrictNamesToolStripMenuItem";
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Text = "Clean FileGDB street and district names ";
-            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Click += new System.EventHandler(this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem_Click);
-            // 
-            // identifyRoadDefinitionSuspectsToolStripMenuItem
-            // 
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Name = "identifyRoadDefinitionSuspectsToolStripMenuItem";
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Text = "Identify road definition suspects";
-            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Click += new System.EventHandler(this.identifyRoadDefinitionSuspectsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(374, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(653, 6);
+            // 
+            // importAddressingDistrictsToolStripMenuItem
+            // 
+            this.importAddressingDistrictsToolStripMenuItem.Name = "importAddressingDistrictsToolStripMenuItem";
+            this.importAddressingDistrictsToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.importAddressingDistrictsToolStripMenuItem.Text = "Import addressing districts";
+            this.importAddressingDistrictsToolStripMenuItem.Click += new System.EventHandler(this.importAddressingDistrictsToolStripMenuItem_Click);
             // 
             // importZoneSectorAndPlotsToolStripMenuItem
             // 
             this.importZoneSectorAndPlotsToolStripMenuItem.Name = "importZoneSectorAndPlotsToolStripMenuItem";
-            this.importZoneSectorAndPlotsToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.importZoneSectorAndPlotsToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
             this.importZoneSectorAndPlotsToolStripMenuItem.Text = "Import zone, sector and plot to application";
             this.importZoneSectorAndPlotsToolStripMenuItem.Click += new System.EventHandler(this.importZoneSectorAndPlotsToolStripMenuItem_Click);
             // 
-            // addPlotIDsToFGDBToolStripMenuItem
+            // importRoadsAndRoadCenterLinesToolStripMenuItem
             // 
-            this.addPlotIDsToFGDBToolStripMenuItem.Name = "addPlotIDsToFGDBToolStripMenuItem";
-            this.addPlotIDsToFGDBToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
-            this.addPlotIDsToFGDBToolStripMenuItem.Text = "Add zone, sector, plot to a FileGDB";
-            this.addPlotIDsToFGDBToolStripMenuItem.Click += new System.EventHandler(this.addPlotIDsToFGDBToolStripMenuItem_Click);
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Name = "importRoadsAndRoadCenterLinesToolStripMenuItem";
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Text = "Import roads and road center lines";
+            this.importRoadsAndRoadCenterLinesToolStripMenuItem.Click += new System.EventHandler(this.importRoadsAndRoadCenterLinesToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(374, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(653, 6);
             // 
             // testQRCodesOfSelectedLayerToolStripMenuItem
             // 
             this.testQRCodesOfSelectedLayerToolStripMenuItem.Name = "testQRCodesOfSelectedLayerToolStripMenuItem";
-            this.testQRCodesOfSelectedLayerToolStripMenuItem.Size = new System.Drawing.Size(377, 24);
+            this.testQRCodesOfSelectedLayerToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
             this.testQRCodesOfSelectedLayerToolStripMenuItem.Text = "Test QR codes of selected address unit layer";
             this.testQRCodesOfSelectedLayerToolStripMenuItem.Click += new System.EventHandler(this.testQRCodesOfSelectedLayerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(653, 6);
+            // 
+            // identifyRoadDefinitionSuspectsToolStripMenuItem
+            // 
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Name = "identifyRoadDefinitionSuspectsToolStripMenuItem";
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Text = "Identify road definition suspects in adm-adr.mdb PGeo database";
+            this.identifyRoadDefinitionSuspectsToolStripMenuItem.Click += new System.EventHandler(this.identifyRoadDefinitionSuspectsToolStripMenuItem_Click);
+            // 
+            // cleanMainAddressingDatabaseToolStripMenuItem
+            // 
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Name = "cleanMainAddressingDatabaseToolStripMenuItem";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Text = "Clean adm-adr.mdb PGeo database";
+            this.cleanMainAddressingDatabaseToolStripMenuItem.Click += new System.EventHandler(this.cleanMainAddressingDatabaseToolStripMenuItem_Click);
+            // 
+            // addPlotIDsToFGDBToolStripMenuItem
+            // 
+            this.addPlotIDsToFGDBToolStripMenuItem.Name = "addPlotIDsToFGDBToolStripMenuItem";
+            this.addPlotIDsToFGDBToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.addPlotIDsToFGDBToolStripMenuItem.Text = "Update ADM FileGDB with zone, sector and plot attributes";
+            this.addPlotIDsToFGDBToolStripMenuItem.Click += new System.EventHandler(this.addPlotIDsToFGDBToolStripMenuItem_Click);
+            // 
+            // cleanFileGDBStreetAndDistrictNamesToolStripMenuItem
+            // 
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Name = "cleanFileGDBStreetAndDistrictNamesToolStripMenuItem";
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Text = "Update ADM FileGDB with street and district names from adm-adr.mdb PGeo database";
+            this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem.Click += new System.EventHandler(this.cleanFileGDBStreetAndDistrictNamesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(653, 6);
+            // 
+            // exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem
+            // 
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem.Name = "exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem";
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem.Text = "Export addressing districts to myabudhabi.net SQL";
+            this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem.Click += new System.EventHandler(this.exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem_Click);
+            // 
+            // exportFileGDBToMyabudhabinetSQLToolStripMenuItem
+            // 
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Name = "exportFileGDBToMyabudhabinetSQLToolStripMenuItem";
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Size = new System.Drawing.Size(656, 24);
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Text = "Export ADM FileGDB to myabudhabi.net SQL";
+            this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem.Click += new System.EventHandler(this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem_Click);
             // 
             // mapToolStripMenuItem
             // 
@@ -418,7 +455,8 @@
             this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportSelectedPointLayerToSpatialiteToolStripMenuItem,
             this.exportSelectedAddressUnitLayerToToolStripMenuItem,
-            this.exportSelectedDatabasesToToolStripMenuItem});
+            this.exportSelectedDatabasesToToolStripMenuItem,
+            this.exportSelectedFileGDBToToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(64, 24);
             this.exportToolStripMenuItem.Text = "Export";
@@ -426,8 +464,9 @@
             // exportSelectedPointLayerToSpatialiteToolStripMenuItem
             // 
             this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Name = "exportSelectedPointLayerToSpatialiteToolStripMenuItem";
-            this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Size = new System.Drawing.Size(327, 24);
+            this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Size = new System.Drawing.Size(447, 24);
             this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Text = "Export selected layer to Spatialite";
+            this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Visible = false;
             this.exportSelectedPointLayerToSpatialiteToolStripMenuItem.Click += new System.EventHandler(this.exportSelectedFeatureLayerToSpatialiteToolStripMenuItem_Click);
             // 
             // exportSelectedAddressUnitLayerToToolStripMenuItem
@@ -440,8 +479,9 @@
             this.exportAddressUnitsToSQLITEDbToolStripMenuItem,
             this.exportForMyabudhabinetToolStripMenuItem});
             this.exportSelectedAddressUnitLayerToToolStripMenuItem.Name = "exportSelectedAddressUnitLayerToToolStripMenuItem";
-            this.exportSelectedAddressUnitLayerToToolStripMenuItem.Size = new System.Drawing.Size(327, 24);
+            this.exportSelectedAddressUnitLayerToToolStripMenuItem.Size = new System.Drawing.Size(447, 24);
             this.exportSelectedAddressUnitLayerToToolStripMenuItem.Text = "Export selected address unit layer to...";
+            this.exportSelectedAddressUnitLayerToToolStripMenuItem.Click += new System.EventHandler(this.exportSelectedAddressUnitLayerToToolStripMenuItem_Click);
             // 
             // exportSelectedPointLayerAsGPXToolStripMenuItem
             // 
@@ -462,6 +502,7 @@
             this.exportSelectedLayerAsFileGDBToolStripMenuItem.Name = "exportSelectedLayerAsFileGDBToolStripMenuItem";
             this.exportSelectedLayerAsFileGDBToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
             this.exportSelectedLayerAsFileGDBToolStripMenuItem.Text = "...FileGDB (for ADM)";
+            this.exportSelectedLayerAsFileGDBToolStripMenuItem.Visible = false;
             this.exportSelectedLayerAsFileGDBToolStripMenuItem.Click += new System.EventHandler(this.exportSelectedLayerAsFileGDBToolStripMenuItem_Click);
             // 
             // exportAddressUnitsToGeopaparazziProjectToolStripMenuItem
@@ -469,6 +510,7 @@
             this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem.Name = "exportAddressUnitsToGeopaparazziProjectToolStripMenuItem";
             this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
             this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem.Text = "...Geopaparazzi project";
+            this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem.Visible = false;
             this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem.Click += new System.EventHandler(this.exportAddressUnitsToGeopaparazziProjectToolStripMenuItem_Click);
             // 
             // exportAddressUnitsToSQLITEDbToolStripMenuItem
@@ -476,6 +518,7 @@
             this.exportAddressUnitsToSQLITEDbToolStripMenuItem.Name = "exportAddressUnitsToSQLITEDbToolStripMenuItem";
             this.exportAddressUnitsToSQLITEDbToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
             this.exportAddressUnitsToSQLITEDbToolStripMenuItem.Text = "...SQLITE db";
+            this.exportAddressUnitsToSQLITEDbToolStripMenuItem.Visible = false;
             this.exportAddressUnitsToSQLITEDbToolStripMenuItem.Click += new System.EventHandler(this.exportAddressUnitsToSQLITEDbToolStripMenuItem_Click);
             // 
             // exportForMyabudhabinetToolStripMenuItem
@@ -483,6 +526,7 @@
             this.exportForMyabudhabinetToolStripMenuItem.Name = "exportForMyabudhabinetToolStripMenuItem";
             this.exportForMyabudhabinetToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
             this.exportForMyabudhabinetToolStripMenuItem.Text = "...SQL (for myabudhabi.net)";
+            this.exportForMyabudhabinetToolStripMenuItem.Visible = false;
             this.exportForMyabudhabinetToolStripMenuItem.Click += new System.EventHandler(this.exportForMyabudhabinetToolStripMenuItem_Click);
             // 
             // exportSelectedDatabasesToToolStripMenuItem
@@ -491,22 +535,39 @@
             this.sQLforMyabudhabinetToolStripMenuItem,
             this.fileGDBforADMToolStripMenuItem});
             this.exportSelectedDatabasesToToolStripMenuItem.Name = "exportSelectedDatabasesToToolStripMenuItem";
-            this.exportSelectedDatabasesToToolStripMenuItem.Size = new System.Drawing.Size(327, 24);
-            this.exportSelectedDatabasesToToolStripMenuItem.Text = "Export selected databases to...";
+            this.exportSelectedDatabasesToToolStripMenuItem.Size = new System.Drawing.Size(447, 24);
+            this.exportSelectedDatabasesToToolStripMenuItem.Text = "Export selected contractors\' sign database (*.accdb) to...";
+            this.exportSelectedDatabasesToToolStripMenuItem.Click += new System.EventHandler(this.exportSelectedDatabasesToToolStripMenuItem_Click);
             // 
             // sQLforMyabudhabinetToolStripMenuItem
             // 
             this.sQLforMyabudhabinetToolStripMenuItem.Name = "sQLforMyabudhabinetToolStripMenuItem";
-            this.sQLforMyabudhabinetToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
-            this.sQLforMyabudhabinetToolStripMenuItem.Text = "...SQL (for myabudhabi.net)";
+            this.sQLforMyabudhabinetToolStripMenuItem.Size = new System.Drawing.Size(224, 24);
+            this.sQLforMyabudhabinetToolStripMenuItem.Text = "...myabudhabi.net SQL";
+            this.sQLforMyabudhabinetToolStripMenuItem.Visible = false;
             this.sQLforMyabudhabinetToolStripMenuItem.Click += new System.EventHandler(this.sQLforMyabudhabinetToolStripMenuItem_Click);
             // 
             // fileGDBforADMToolStripMenuItem
             // 
             this.fileGDBforADMToolStripMenuItem.Name = "fileGDBforADMToolStripMenuItem";
-            this.fileGDBforADMToolStripMenuItem.Size = new System.Drawing.Size(257, 24);
-            this.fileGDBforADMToolStripMenuItem.Text = "...FileGDB (for ADM)";
+            this.fileGDBforADMToolStripMenuItem.Size = new System.Drawing.Size(224, 24);
+            this.fileGDBforADMToolStripMenuItem.Text = "...ADM FileGDB";
             this.fileGDBforADMToolStripMenuItem.Click += new System.EventHandler(this.fileGDBforADMToolStripMenuItem_Click);
+            // 
+            // exportSelectedFileGDBToToolStripMenuItem
+            // 
+            this.exportSelectedFileGDBToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sQLforMyAbuDhabinetToolStripMenuItem1});
+            this.exportSelectedFileGDBToToolStripMenuItem.Name = "exportSelectedFileGDBToToolStripMenuItem";
+            this.exportSelectedFileGDBToToolStripMenuItem.Size = new System.Drawing.Size(447, 24);
+            this.exportSelectedFileGDBToToolStripMenuItem.Text = "Export selected ADM FileGDB to...";
+            // 
+            // sQLforMyAbuDhabinetToolStripMenuItem1
+            // 
+            this.sQLforMyAbuDhabinetToolStripMenuItem1.Name = "sQLforMyAbuDhabinetToolStripMenuItem1";
+            this.sQLforMyAbuDhabinetToolStripMenuItem1.Size = new System.Drawing.Size(224, 24);
+            this.sQLforMyAbuDhabinetToolStripMenuItem1.Text = "...myabudhabi.net SQL";
+            this.sQLforMyAbuDhabinetToolStripMenuItem1.Click += new System.EventHandler(this.exportFileGDBToMyabudhabinetSQLToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -881,7 +942,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Convert and View As-Built Data Addressing Data";
+            this.Text = "As-Built Data Viewer and Converter";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.theMapToolbar.ResumeLayout(false);
@@ -1003,6 +1064,12 @@
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanMainAddressingDatabaseToolStripMenuItem;
         public System.Windows.Forms.ToolStripProgressBar pgBar;
+        private System.Windows.Forms.ToolStripButton btnTest;
+        private System.Windows.Forms.ToolStripMenuItem exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportSelectedFileGDBToToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sQLforMyAbuDhabinetToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     }
 }
 

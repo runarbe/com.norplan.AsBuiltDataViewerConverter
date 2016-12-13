@@ -42,7 +42,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3),
                     ExtFunctions.GetProjByEPSG(32640)
                     );
-                ExtFunctions.ExportFeatureLayerToOGR(
+                var mAUNSResult = ExtFunctions.ExportFeatureLayerToOGR(
                     pDrvNm: "FileGDB",
                     pFLyr: mAUNSLayer,
                     pOPFn: pOutputFilename,
@@ -51,6 +51,8 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" },
                     pAppend: true
                     );
+                pFrm.Log(mAUNSResult.GetMessages());
+
                 IFeatureLayer mSNSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(
                     mGroup.Layers,
                     mStreetNameFeatures,
@@ -58,7 +60,8 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     MapSymbols.PointSymbol(SignColors.StreetNameSign, 3),
                     ExtFunctions.GetProjByEPSG(32640)
                     );
-                ExtFunctions.ExportFeatureLayerToOGR(
+
+                var mSNSResult = ExtFunctions.ExportFeatureLayerToOGR(
                     pDrvNm: "FileGDB",
                     pFLyr: mSNSLayer,
                     pOPFn: pOutputFilename,
@@ -67,6 +70,8 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" },
                     pAppend: true
                     );
+                pFrm.Log(mSNSResult.GetMessages());
+
                 IFeatureLayer mAGSLayer = (IFeatureLayer)ExtFunctions.GetFeatureLayer(
                     mGroup.Layers,
                     mAddressGuideFeatures,
@@ -74,7 +79,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     MapSymbols.PointSymbol(SignColors.AddressGuideSign, 3),
                     ExtFunctions.GetProjByEPSG(32640)
                     );
-                ExtFunctions.ExportFeatureLayerToOGR(
+                var mAGSResult = ExtFunctions.ExportFeatureLayerToOGR(
                     pDrvNm: "FileGDB",
                     pFLyr: mAGSLayer,
                     pOPFn: pOutputFilename,
@@ -83,6 +88,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     pLCOpts: new List<string>() { "FEATURE_DATASET=Simplified" },
                     pAppend: true
                     );
+                pFrm.Log(mAGSResult.GetMessages());
                 pFrm.Log("Completed parsing: " + mDbFilename);
                 Application.DoEvents();
             }
@@ -96,10 +102,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         /// <param name="pDrvNm">A name like KML, ESRI SHapefile or FileGDB etc.</param>
         /// <param name="pFLyr">A layer that implements the IFeatureLayer interface</param>
-        /// <param name="pOPFn">The filename of the output file</param>
+        /// <param name="pOPFn">The outputShapefileName of the output file</param>
         /// <param name="pSrcProj">The SRS of the source dataset</param>
         /// <param name="pTgtProj">The SRS of the output dataset</param>
-        /// <param name="pHasTitle">A boolean flag that determines whether to create a special title field</param>
+        /// <param name="pHasTitle">A boolean flag that determines whether to create fieldAttributes special title field</param>
         /// <param name="pTitleFieldNames">A comma separated list of field names to be used in the special title field</param>
         /// <param name="pTitleFormat">The C# String.Format format of the special title field</param>
         /// <param name="pLCOpts">A string array of layer creation options in the form of OPTION=VALUE entries</param>
@@ -139,7 +145,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             // Read the target SRS
             SpatialReference mTgtSRS = ExtFunctions.GetSpatialReferenceByEPSG(pTgtProj.AuthorityCode);
 
-            // If transformation is needed, create a shared transformation object for the export
+            // If transformation is needed, create fieldAttributes shared transformation object for the export
             if (mTransformRequired)
             {
                 pFLyr.Projection = pSrcProj;
@@ -161,7 +167,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 pDSCOpts.Add("NameField=" + ExtFunctions.TitleFieldName);
             }
 
-            // Create a datasource
+            // Create fieldAttributes datasource
             DataSource ds = null;
             try
             {
@@ -209,7 +215,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return mReturnValue;
             }
 
-            // Create a list to hold the names of fields
+            // Create fieldAttributes list to hold the names of fields
             var mDataSourceFieldNames = new List<string>();
 
             // Loop through all the fields
@@ -260,7 +266,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             }
 
-            // For each of the row index mFeatureIndex the source featureset
+            int createdFeatures = 0;
+
+            // For each row in the source featureset
             for (int i = 0; i < pFLyr.DataSet.NumRows(); i++)
             {
                 // Read the source feature
@@ -275,7 +283,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 // Set feature id
                 mFeature.SetFID(i);
 
-                // Handle attributes
+                // Handle fieldAttributes
                 for (int j = 0; j < mDataSourceFieldNames.Count(); j++)
                 {
                     var mCurrentValue = mSrcFeature.DataRow[j];
@@ -305,7 +313,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
                 }
 
-                // If title field is to be created, use field values collected above to construct a new string format
+                // If title field is to be created, use field values collected above to construct fieldAttributes new string format
                 // to go into the title-field
                 if (pHasTitle == true)
                 {
@@ -317,7 +325,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 try
                 {
                     l.CreateFeature(mFeature);
-
+                    createdFeatures++;
                 }
                 catch (Exception ex)
                 {
@@ -334,6 +342,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             l.Dispose();
             ds.Dispose();
             drv.Dispose();
+
+            mReturnValue.AddMessage(String.Format("Added {0} features to layer {1}",
+                createdFeatures,
+                pFLyr.LegendText));
 
             return mReturnValue;
         }

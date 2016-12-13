@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Norplan.Adm.AsBuiltDataConversion.TypeExtensions;
+using OSGeo.GDAL;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
@@ -22,11 +23,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 // Load road names
                 pFrm.Log("Start loading names");
 
-                string mSql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD WHERE APPROVED = 1";
-
                 var mRoadNames = new Dictionary<int, DataRow>();
 
-                var mDataAdapter = new OdbcDataAdapter(mSql, mOdbcConn);
+                var mDataAdapter = new OdbcDataAdapter(sqlStatements.selectRoadNamesSQL, mOdbcConn);
                 var mDataTable = new DataTable();
                 mDataAdapter.Fill(mDataTable);
 
@@ -48,45 +47,32 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 }
                 pFrm.Log("Done loading road names");
 
-                // Load district names
-                var mDistNames = new Dictionary<string, DataRow>();
-                var mSql2 = "SELECT \"ABBREVIATION\", \"NAMEENGLISH\", \"NAMEARABIC\" FROM ADRDISTRICT WHERE \"APPROVED\" = 'Y'";
-
-                var mDataAdapter2 = new OdbcDataAdapter(mSql2, mOdbcConn);
-                var mDataTable2 = new DataTable();
-                mDataAdapter2.Fill(mDataTable2);
-                
-                ctr1 = 0;
-                total1 = mDataTable2.Rows.Count;
-
-                foreach (DataRow mRow in mDataTable2.Rows)
-                {
-                    string mDistAbbrev = mRow["ABBREVIATION"].ToString().ToLower().Trim();
-                    if (!String.IsNullOrEmpty(mDistAbbrev))
-                    {
-                        mDistNames.Add(mDistAbbrev, mRow);
-                    }
-                    ctr1++;
-                    if (ctr1 % 50 == 0)
-                    {
-                        Application.DoEvents();
-                    }
-                }
-
-                pFrm.Log("Done loading district names");
-
                 mOdbcConn.Close();
                 mDataAdapter = null;
                 mOdbcConn = null;
+
+                // Load district names
+                Gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+                DataSource districtDataSource = Ogr.Open(DistrictImport.GetShapefileName(), 0);
+                OSGeo.OGR.Layer districtLayer = districtDataSource.GetLayerByIndex(0);
+                if (districtLayer == null)
+                {
+                    pFrm.Log("Could not load district names layer");
+                    goto CleanUpDistricts;
+                }
+
+                pFrm.Log("Done loading district names");
 
                 var mFileGDBDrv = OSGeo.OGR.Ogr.GetDriverByName("FileGDB");
                 var mTgtDSrc = mFileGDBDrv.Open(pTgtFileGDB, 1);
                 var mTgtLyr = mTgtDSrc.GetLayerByName(pTgtFeatClass);
 
-                if (mTgtLyr != null)
+                if (mTgtLyr == null)
                 {
-                    pFrm.Log("Opened target FileGDB for update");
+                    pFrm.Log("Could not open layer " + pTgtFeatClass + " for update");
+                    goto CleanUp;
                 }
+                pFrm.Log("Opened target FileGDB for update");
 
                 Feature mFeat = null;
 
@@ -97,29 +83,97 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 int idxDelete = 0;
                 while (null != (mFeat = mTgtLyr.GetNextFeature()))
                 {
-                    int mRoadID = mFeat.GetFieldAsInteger("ROADID");
-                    string mDistrictID = mFeat.GetFieldAsString("DISTRICTID").ToLower().Trim();
+                    Geometry mGeometry = mFeat.GetGeometryRef();
+                    double[] p = new double[2];
+                    mGeometry.GetPoint(0, p);
 
-                    mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
-                    mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
-                    mFeat.SetField("ROADNAME_POP_EN", null);
-                    mFeat.SetField("ROADNAME_POP_AR", null);
-                    mFeat.SetField("DISTRICT_EN", mDistNames.GetStringOrNull(mDistrictID, "NAMEENGLISH"));
-                    mFeat.SetField("DISTRICT_AR", mDistNames.GetStringOrNull(mDistrictID, "NAMEARABIC"));
+                    if (pTgtFeatClass == "Address_unit_signs")
+                    {
+                        int mRoadID = mFeat.GetFieldAsInteger("ROADID");
+                        mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
+                        mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
+                        mFeat.SetField("ROADNAME_POP_EN", null);
+                        mFeat.SetField("ROADNAME_POP_AR", null);
+                        mFeat.SetField("DESCRIPTION_EN", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONENGLISH"));
+                        mFeat.SetField("DESCRIPTION_AR", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONARABIC"));
+                    }
+                    else if (pTgtFeatClass == "Street_name_signs")
+                    {
+                        int mRoadID1 = mFeat.GetFieldAsInteger("ROADID_P1");
+                        int mRoadID2 = mFeat.GetFieldAsInteger("ROADID_P2");
+                        mFeat.SetField("ROADNAME_EN_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEENGLISH"));
+                        mFeat.SetField("ROADNAME_AR_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEARABIC"));
+                        mFeat.SetField("ROADNAME_EN_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEENGLISH"));
+                        mFeat.SetField("ROADNAME_AR_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEARABIC"));
+                    }
+                    else if (pTgtFeatClass == "Address_guide_sign")
+                    {
+                        int mRoadID = mFeat.GetFieldAsInteger("ROADID");
+                        mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
+                        mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
+                    }
+
+                    districtLayer.SetSpatialFilter(mGeometry);
+                    Feature matchDistrict = districtLayer.GetNextFeature();
+                    if (matchDistrict != null)
+                    {
+                        mFeat.SetField("DISTRICT_EN", matchDistrict.GetFieldAsString("NAMELATIN"));
+                        mFeat.SetField("DISTRICT_AR", matchDistrict.GetFieldAsString("NAMEARABIC"));
+                    }
+                    else
+                    {
+                        mFeat.SetField("DISTRICT_EN", null);
+                        mFeat.SetField("DISTRICT_AR", null);
+                        pFrm.Log("No district name match for " + pTgtFeatClass + " with coordinates: " + p[0].ToString() + ", " + p[1].ToString());
+                    }
 
                     mTgtLyr.SetFeature(mFeat);
+
                     idxDelete++;
+
                     if (idxDelete % 500 == 0 || idxDelete == mNumTgtFeats)
                     {
                         pFrm.Log("Processed " + idxDelete + " out of" + mNumTgtFeats + " features");
                         Application.DoEvents();
                     }
 
+                    if (matchDistrict != null)
+                    {
+                        matchDistrict.Dispose();
+                    }
+
+                    if (mFeat != null)
+                    {
+                        mFeat.Dispose();
+                    }
                 }
 
-                mTgtLyr.Dispose();
-                mTgtDSrc.Dispose();
-                mFileGDBDrv.Dispose();
+            CleanUp:
+
+                if (mTgtLyr != null)
+                {
+                    mTgtLyr.Dispose();
+                }
+                if (mTgtDSrc != null)
+                {
+                    mTgtDSrc.Dispose();
+                }
+                if (mFileGDBDrv != null)
+                {
+                    mFileGDBDrv.Dispose();
+                }
+
+            CleanUpDistricts:
+
+                if (districtLayer != null)
+                {
+                    districtLayer.Dispose();
+                }
+
+                if (districtDataSource != null)
+                {
+                    districtDataSource.Dispose();
+                }
 
             }
             catch (Exception ex)

@@ -15,7 +15,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
     public class Database : IDisposable
     {
         /// <summary>
-        /// Database filename
+        /// Database outputShapefileName
         /// </summary>
         public string DbFilename = "";
         /// <summary>
@@ -23,7 +23,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// </summary>
         public string DbDirectory = "";
         /// <summary>
-        /// Database base filename
+        /// Database base outputShapefileName
         /// </summary>
         public string DbBaseName = "";
 
@@ -45,7 +45,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="pOPFn">The filename of the access 2010+ database to open</param>
+        /// <param name="pOPFn">The outputShapefileName of the access 2010+ database to open</param>
         public Database(string dbFileName)
         {
             this.DbFilename = dbFileName;
@@ -82,7 +82,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <summary>
         /// Queries SQL
         /// </summary>
-        /// <param name="sqlStatement">The SQL statement to execute, typically a SELECT</param>
+        /// <param name="sqlStatement">The SQL statement to execute, typically fieldAttributes SELECT</param>
         /// <returns>A .NET DataTable object containing the records returned by the statement</returns>
         public DataTable Query(string sqlStatement)
         {
@@ -90,7 +90,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             {
                 this.Open();
             }
-            this._dataAdapter = new OleDbDataAdapter(sqlStatement, this._dbConnection);
+                this._dataAdapter = new OleDbDataAdapter(sqlStatement, this._dbConnection);
             var dataSet = new DataSet();
             this._dataAdapter.Fill(dataSet);
             return dataSet.Tables[0];
@@ -107,7 +107,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Open a new database connection
+        /// Open fieldAttributes new database connection
         /// </summary>
         public void Open()
         {
