@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using Norplan.Adm.AsBuiltDataConversion.TypeExtensions;
 using OSGeo.GDAL;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Norplan.Adm.AsBuiltDataConversion.Functions
 {
@@ -48,11 +50,14 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 pFrm.Log("Done loading road names");
 
                 mOdbcConn.Close();
+                mDataAdapter.Dispose();
                 mDataAdapter = null;
+                mOdbcConn.Dispose();
                 mOdbcConn = null;
 
                 // Load district names
                 Gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+
                 DataSource districtDataSource = Ogr.Open(DistrictImport.GetShapefileName(), 0);
                 OSGeo.OGR.Layer districtLayer = districtDataSource.GetLayerByIndex(0);
                 if (districtLayer == null)
@@ -80,72 +85,88 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
                 // Clean all existing district and street names
                 pFrm.Log("Processing");
-                int idxDelete = 0;
-                while (null != (mFeat = mTgtLyr.GetNextFeature()))
+
+                for (int idxFeature = 0; idxFeature < mNumTgtFeats; idxFeature++)
                 {
-                    Geometry mGeometry = mFeat.GetGeometryRef();
-                    double[] p = new double[2];
-                    mGeometry.GetPoint(0, p);
+                    if (null != (mFeat = mTgtLyr.GetFeature(idxFeature)))
+                    {
+                        Geometry mGeometry = mFeat.GetGeometryRef();
+                        double[] p = new double[2];
+                        mGeometry.GetPoint(0, p);
 
-                    if (pTgtFeatClass == "Address_unit_signs")
-                    {
-                        int mRoadID = mFeat.GetFieldAsInteger("ROADID");
-                        mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
-                        mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
-                        mFeat.SetField("ROADNAME_POP_EN", null);
-                        mFeat.SetField("ROADNAME_POP_AR", null);
-                        mFeat.SetField("DESCRIPTION_EN", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONENGLISH"));
-                        mFeat.SetField("DESCRIPTION_AR", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONARABIC"));
-                    }
-                    else if (pTgtFeatClass == "Street_name_signs")
-                    {
-                        int mRoadID1 = mFeat.GetFieldAsInteger("ROADID_P1");
-                        int mRoadID2 = mFeat.GetFieldAsInteger("ROADID_P2");
-                        mFeat.SetField("ROADNAME_EN_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEENGLISH"));
-                        mFeat.SetField("ROADNAME_AR_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEARABIC"));
-                        mFeat.SetField("ROADNAME_EN_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEENGLISH"));
-                        mFeat.SetField("ROADNAME_AR_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEARABIC"));
-                    }
-                    else if (pTgtFeatClass == "Address_guide_sign")
-                    {
-                        int mRoadID = mFeat.GetFieldAsInteger("ROADID");
-                        mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
-                        mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
-                    }
+                        if (pTgtFeatClass == "Address_unit_signs")
+                        {
+                            int mRoadID = mFeat.GetFieldAsInteger("ROADID");
+                            mFeat.SetField("ROADNAME_EN", mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH"));
+                            mFeat.SetField("ROADNAME_AR", mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC"));
+                            mFeat.SetField("ROADNAME_POP_EN", null);
+                            mFeat.SetField("ROADNAME_POP_AR", null);
+                            mFeat.SetField("DESCRIPTION_EN", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONENGLISH"));
+                            mFeat.SetField("DESCRIPTION_AR", mRoadNames.GetStringOrNull(mRoadID, "DESCRIPTIONARABIC"));
+                        }
+                        else if (pTgtFeatClass == "Street_name_signs")
+                        {
+                            int mRoadID1 = mFeat.GetFieldAsInteger("ROADID_P1");
+                            int mRoadID2 = mFeat.GetFieldAsInteger("ROADID_P2");
+                            mFeat.SetField("ROADNAME_EN_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEENGLISH"));
+                            mFeat.SetField("ROADNAME_AR_P1", mRoadNames.GetStringOrNull(mRoadID1, "NAMEARABIC"));
+                            mFeat.SetField("ROADNAME_EN_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEENGLISH"));
+                            mFeat.SetField("ROADNAME_AR_P2", mRoadNames.GetStringOrNull(mRoadID2, "NAMEARABIC"));
+                        }
+                        else if (pTgtFeatClass == "Address_guide_sign")
+                        {
+                            int mRoadID = mFeat.GetFieldAsInteger("ROADID");
+                            string tmpRoadEn = mRoadNames.GetStringOrNull(mRoadID, "NAMEENGLISH");
+                            string tmpRoadAr = mRoadNames.GetStringOrNull(mRoadID, "NAMEARABIC");
+                            mFeat.SetField("ROADNAME_EN", tmpRoadEn);
+                            mFeat.SetField("ROADNAME_AR", tmpRoadAr);
+                        }
 
-                    districtLayer.SetSpatialFilter(mGeometry);
-                    Feature matchDistrict = districtLayer.GetNextFeature();
-                    if (matchDistrict != null)
-                    {
-                        mFeat.SetField("DISTRICT_EN", matchDistrict.GetFieldAsString("NAMELATIN"));
-                        mFeat.SetField("DISTRICT_AR", matchDistrict.GetFieldAsString("NAMEARABIC"));
-                    }
-                    else
-                    {
-                        mFeat.SetField("DISTRICT_EN", null);
-                        mFeat.SetField("DISTRICT_AR", null);
-                        pFrm.Log("No district name match for " + pTgtFeatClass + " with coordinates: " + p[0].ToString() + ", " + p[1].ToString());
-                    }
-
-                    mTgtLyr.SetFeature(mFeat);
-
-                    idxDelete++;
-
-                    if (idxDelete % 500 == 0 || idxDelete == mNumTgtFeats)
-                    {
-                        pFrm.Log("Processed " + idxDelete + " out of" + mNumTgtFeats + " features");
+                        districtLayer.SetSpatialFilter(mGeometry);
+                        using (Feature matchDistrict = districtLayer.GetFeature(0))
+                        {
+                            if (matchDistrict != null
+                                && matchDistrict.IsFieldSet("NAMELATIN")
+                                && matchDistrict.IsFieldSet("NAMEARABIC"))
+                            {
+                                string tmpDistEn = matchDistrict.GetFieldAsString("NAMELATIN");
+                                string tmpDistAr = matchDistrict.GetFieldAsString("NAMEARABIC");
+                                mFeat.SetField("DISTRICT_EN", tmpDistEn);
+                                mFeat.SetField("DISTRICT_AR", tmpDistAr);
+                            }
+                            else
+                            {
+                                mFeat.SetField("DISTRICT_EN", null);
+                                mFeat.SetField("DISTRICT_AR", null);
+                                pFrm.Log("No district name match for " + pTgtFeatClass + " with coordinates: " + p[0].ToString() + ", " + p[1].ToString());
+                            }
+                        }
+                        
                         Application.DoEvents();
+
+                        mTgtLyr.SetFeature(mFeat);
+
+                    DoEventsOnBatchSize:
+
+                        if (idxFeature % 250 == 0 || idxFeature == mNumTgtFeats)
+                        {
+                            pFrm.Log("Processed " + idxFeature + " out of" + mNumTgtFeats + " features");
+                            //Thread.Sleep(250);
+                            mTgtLyr.SyncToDisk();
+                        }
+
+                        if (mGeometry != null)
+                        {
+                            mGeometry.Dispose();
+                        }
+
+                        if (mFeat != null)
+                        {
+                            mFeat.Dispose();
+                        }
+
                     }
 
-                    if (matchDistrict != null)
-                    {
-                        matchDistrict.Dispose();
-                    }
-
-                    if (mFeat != null)
-                    {
-                        mFeat.Dispose();
-                    }
                 }
 
             CleanUp:

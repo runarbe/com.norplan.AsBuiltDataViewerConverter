@@ -526,7 +526,7 @@
 
     xcopy /s /y "$(SolutionDir)packages\release-1600-gdal-mapserver\bin\gdal\csharp\*.*" "$(TargetDir)gdal"
 
-    xcopy /s /y "$(SolutionDir)packages\gdal-110-1600-filegdb\*.*" "$(TargetDir)gdal\gdal\plugins-external"</PostBuildEvent>
+    xcopy /s /y "$(SolutionDir)packages\gdal-111-1600-filegdb\*.*" "$(TargetDir)gdal\gdal\plugins-external"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
