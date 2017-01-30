@@ -19,7 +19,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return null;
             }
 
-            // Create a datasource
+            // Create fieldAttributes datasource
             DataSource ds = drv.CreateDataSource(@"C:\users\runarbe\desktop\test\test.gml", null);
             if (ds == null)
             {
@@ -27,7 +27,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return null;
             }
 
-            // Create a layer
+            // Create fieldAttributes layer
             OSGeo.OGR.Layer l = ds.CreateLayer("AddressUnits", null, wkbGeometryType.wkbPoint, null);
             if (l == null)
             {

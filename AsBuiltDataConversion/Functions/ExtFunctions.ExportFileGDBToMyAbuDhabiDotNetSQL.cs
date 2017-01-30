@@ -1,7 +1,9 @@
 ﻿using DotSpatial.Controls;
+using DotSpatial.Data;
 using DotSpatial.Projections;
 using Norplan.Adm.AsBuiltDataConversion.DataTypes;
 using Norplan.Adm.AsBuiltDataConversion.FeatureTypes;
+using Norplan.Adm.AsBuiltDataConversion.MyAbuDhabi;
 using OSGeo.OGR;
 using System;
 using System.Collections.Generic;
@@ -24,9 +26,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <param name="pBatchSize"></param>
         /// <param name="pAppend"></param>
         /// <returns></returns>
-        public static RetVal ExportFileGDBToMyAbuDhabiDotNetSQL(frmMain pFrm, string pSrcFileGDB, string pSQLFileName, int pBatchSize = 25, bool pAppend = false)
+        public static ReturnValue ExportFileGDBToMyAbuDhabiDotNetSQL(frmMain pFrm, string pSrcFileGDB, string pSQLFileName, int pBatchSize = 25, bool pAppend = false)
         {
-            var mRetVal = new RetVal(RetValStatus.success, null);
+            var mRetVal = new ReturnValue(true);
 
             NumberFormatInfo mNumFormat = new CultureInfo("en-US", false).NumberFormat;
 
@@ -37,7 +39,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             if (mSrcDSrc == null)
             {
                 pFrm.Log("Could not open ESRI FGDB: " + pSrcFileGDB, true);
-                mRetVal.status = RetValStatus.failure;
+                mRetVal.Success = false;
                 return mRetVal;
             }
 
@@ -54,23 +56,25 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             var mStreamWriter = new StreamWriter(pSQLFileName + "." + mFileCount, pAppend, Encoding.UTF8, 1024);
 
             // Create re-usable feature object
-            Feature mFeat = null;
+            OSGeo.OGR.Feature mFeat = null;
 
-            // Create re-usable districts object to ext
-            IMapLayer mDistricts = ExtFunctions.GetLayerByName(pFrm.theMap, "Districts");
-            if (mDistricts == null)
+            OSGeo.GDAL.Gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+            DataSource mDistrictsDataSource = Ogr.Open(DistrictImport.GetShapefileName(), 0);
+            Layer mDistricts = null;
+            if (mDistrictsDataSource != null)
             {
-                pFrm.Log("Could not find district layer");
-                return mRetVal.Failure();
+                mDistricts = mDistrictsDataSource.GetLayerByIndex(0);
             }
 
-            mDistricts.DataSet.Reproject(KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
-
-            var mRecords = new MyAbuDhabiDotNetRecord();
-
+            var mRecords = new SignRecord();
 
             // Process address unit signs
             var mAUSLyr = mSrcDSrc.GetLayerByName("Address_unit_signs");
+            if (mAUSLyr == null)
+            {
+                mRetVal.AddMessage("Could not find address units layer", true);
+                return mRetVal;
+            }
 
             if (mAUSLyr != null)
             {
@@ -85,7 +89,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     var mGeom = mFeat.GetGeometryRef();
                     Envelope mOrigEnvelope = new Envelope();
                     mGeom.GetEnvelope(mOrigEnvelope);
-                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mOrigEnvelope.MinX, mOrigEnvelope.MinY);
+                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mGeom, 32640);
 
                     mGeom.Transform(mTransformation);
                     Envelope mEnvelope = new Envelope();
@@ -94,18 +98,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     string mWkt;
                     mGeom.ExportToWkt(out mWkt);
 
-
                     mRecords.AddToBuffer(
                         mFeat.GetFieldAsString("QR_CODE"),
                         mFeat.GetFieldAsString("ADDRESSUNITNR"),
                         mFeat.GetFieldAsString("ROADNAME_EN").MySQLEscape(),
                         mFeat.GetFieldAsString("ROADNAME_AR").MySQLEscape(),
-                        mDistrictInfo[0].MySQLEscape(),
-                        mDistrictInfo[1].MySQLEscape(),
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMELATIN").MySQLEscape() : "",
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMEARABIC").MySQLEscape() : "",
                         mEnvelope.MinX.ToString(mNumFormat),
                         mEnvelope.MinY.ToString(mNumFormat),
-                        "",
-                        "",
+                        mFeat.GetFieldAsString("DESCRIPTION_AR").MySQLEscape(),
+                        mFeat.GetFieldAsString("DESCRIPTION_EN").MySQLEscape(),
                         "Address_unit_signs",
                         SignType.addressUnitNumberSign
                         );
@@ -129,8 +132,6 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                         }
                     }
 
-
-
                 }
 
                 pFrm.Log("Done, processed " + idxFeat + " features...");
@@ -142,8 +143,15 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             // Process address unit signs
             var mSNSLyr = mSrcDSrc.GetLayerByName("Street_name_signs");
 
+            if (mSNSLyr == null)
+            {
+                mRetVal.AddMessage("Could not find layer Street_name_signs", true);
+                return mRetVal;
+            }
+
             if (mSNSLyr != null)
             {
+                Debug.WriteLine(mSNSLyr);
                 pFrm.Log("Opened Street_name_signs layer from FileGDB for reading...");
 
                 int mNumFeatures = mSNSLyr.GetFeatureCount(1);
@@ -156,7 +164,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     var mGeom = mFeat.GetGeometryRef();
                     Envelope mOrigEnvelope = new Envelope();
                     mGeom.GetEnvelope(mOrigEnvelope);
-                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mOrigEnvelope.MinX, mOrigEnvelope.MinY);
+                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mGeom, 32640);
 
                     mGeom.Transform(mTransformation);
                     Envelope mEnvelope = new Envelope();
@@ -167,16 +175,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     mRecords.AddToBuffer(
                         mFeat.GetFieldAsString("QR_CODE"),
                         "",
-                        "",
-                        "",
-                        mDistrictInfo[0].MySQLEscape(),
-                        mDistrictInfo[1].MySQLEscape(),
+                        mFeat.GetFieldAsString("ROADNAME_EN_P1").MySQLEscape() + "/" + mFeat.GetFieldAsString("ROADNAME_EN_P2").MySQLEscape(),
+                        mFeat.GetFieldAsString("ROADNAME_AR_P1").MySQLEscape() + "/" + mFeat.GetFieldAsString("ROADNAME_AR_P2").MySQLEscape(),
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMELATIN").MySQLEscape() : "",
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMEARABIC").MySQLEscape() : "",
                         mEnvelope.MinX.ToString(mNumFormat),
                         mEnvelope.MinY.ToString(mNumFormat),
                         "",
                         "",
                         "Street_name_signs",
-                        SignType.streetNameSign
+                        SignType.streetNameSign,
+                        ""
                         );
 
                     idxFeat++;
@@ -186,7 +195,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                         var mSql = String.Format(sqlStatements.insertUpdateMyAbuDhabiNetSQL,
                             mRecords.GetBuffer());
                         mStreamWriter.WriteLine(mSql);
+                        Debug.WriteLine(mSql);
                         pFrm.pgBar.ProgressBar.Value = (idxFeat * 100) / mNumFeatures;
+                        mLineCount++;
+                        if (mLineCount % 500 == 0)
+                        {
+                            mFileCount++;
+                            mStreamWriter.Flush();
+                            mStreamWriter.Close();
+                            mStreamWriter = new StreamWriter(pSQLFileName + "." + mFileCount, pAppend, Encoding.UTF8, 1024);
+                            mLineCount = 0;
+                        }
                     }
 
                 }
@@ -200,6 +219,12 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             // Process address guide signs
             var mAGSLyr = mSrcDSrc.GetLayerByName("Address_guide_sign");
+
+            if (mAGSLyr == null)
+            {
+                mRetVal.AddMessage("Could not find layer Address_guide_sign", true);
+                return mRetVal;
+            }
 
             if (mAGSLyr != null)
             {
@@ -215,7 +240,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     var mGeom = mFeat.GetGeometryRef();
                     Envelope mOrigEnvelope = new Envelope();
                     mGeom.GetEnvelope(mOrigEnvelope);
-                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mOrigEnvelope.MinX, mOrigEnvelope.MinY);
+                    var mDistrictInfo = mDistricts.GetDistrictByPoint(mGeom, 32640);
 
                     mGeom.Transform(mTransformation);
                     Envelope mEnvelope = new Envelope();
@@ -226,17 +251,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     mRecords.AddToBuffer(
                         mFeat.GetFieldAsString("QR_CODE"),
                         "",
-                        "",
-                        "",
-                        mDistrictInfo[0].MySQLEscape(),
-                        mDistrictInfo[1].MySQLEscape(),
+                        mFeat.GetFieldAsString("ROADNAME_EN"),
+                        mFeat.GetFieldAsString("ROADNAME_AR"),
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMELATIN").MySQLEscape() : null,
+                        mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMEARABIC").MySQLEscape() : null,
                         mEnvelope.MinX.ToString(mNumFormat),
                         mEnvelope.MinY.ToString(mNumFormat),
                         "",
                         "",
                         "Address_guide_sign",
-                        SignType.addressGuideSign
-                        );
+                        SignType.addressGuideSign,
+                        "");
 
                     idxFeat++;
 
@@ -246,6 +271,15 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                             mRecords.GetBuffer());
                         mStreamWriter.WriteLine(mSql);
                         pFrm.pgBar.ProgressBar.Value = (idxFeat * 100) / mNumFeatures;
+                        mLineCount++;
+                        if (mLineCount % 500 == 0)
+                        {
+                            mFileCount++;
+                            mStreamWriter.Flush();
+                            mStreamWriter.Close();
+                            mStreamWriter = new StreamWriter(pSQLFileName + "." + mFileCount, pAppend, Encoding.UTF8, 1024);
+                            mLineCount = 0;
+                        }
                     }
 
                 }

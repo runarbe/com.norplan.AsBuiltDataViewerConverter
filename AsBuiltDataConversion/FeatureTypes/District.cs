@@ -13,6 +13,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
         {
 
             this.FeatureType = DotSpatial.Topology.FeatureType.Unspecified;
+            this.DataTable.Columns.Add(new DataColumn("OBJECTID", typeof(int)));
             this.DataTable.Columns.Add(new DataColumn("DISTRICTABBREVIATION", typeof(string)));
             this.DataTable.Columns.Add(new DataColumn("NAMEARABIC", typeof(string)));
             this.DataTable.Columns.Add(new DataColumn("NAMELATIN", typeof(string)));
@@ -21,9 +22,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             this.DataTable.Columns.Add(new DataColumn("APPROVED", typeof(string)));
         }
 
-        public bool AddNewRow(DotSpatial.Topology.IGeometry pPolygon, string pDistrictAbbreviation, string pNameArabic, string pNameLatin, string pNamePopularArabic = "", string pNamePopularLatin= "", string pApproved = "N") {
+        public bool AddNewRow(DotSpatial.Topology.IGeometry pPolygon, int pObjectId, string pDistrictAbbreviation, string pNameArabic, string pNameLatin, string pNamePopularArabic = "", string pNamePopularLatin= "", string pApproved = "N") {
             var mFeature = this.AddFeature(pPolygon);
             mFeature.DataRow.BeginEdit();
+            mFeature.DataRow["OBJECTID"] = pObjectId;
             mFeature.DataRow["DISTRICTABBREVIATION"] = pDistrictAbbreviation;
             mFeature.DataRow["NAMEARABIC"] = pNameArabic;
             mFeature.DataRow["NAMELATIN"] = pNameLatin;

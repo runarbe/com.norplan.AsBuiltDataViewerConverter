@@ -30,7 +30,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         public static string TitleFieldName = "NameFld";
 
         /// <summary>
-        /// Returns the mapped name of a field
+        /// Returns the mapped name of fieldAttributes field
         /// </summary>
         /// <param name="pFieldName">Input field name</param>
         /// <param name="pFieldMap">A map of source and target field names</param>
@@ -93,7 +93,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// If a feature layer is seleted, return it, otherwise null
+        /// If fieldAttributes feature layer is seleted, return it, otherwise null
         /// </summary>
         /// <param name="pMap">DotSpatial Map object</param>
         /// <returns>Feature layer or null</returns>
@@ -104,7 +104,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// If a point layer is selected, return it, otherwise null
+        /// If fieldAttributes point layer is selected, return it, otherwise null
         /// </summary>
         /// <param name="pMap">DotSpatial Map object</param>
         /// <returns>Point layer or null</returns>
@@ -209,7 +209,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Make a sub-set of a specific number of random elements from the selected
+        /// Make fieldAttributes sub-set of fieldAttributes specific number of random elements from the selected
         /// feature layer in the map legend.
         /// </summary>
         /// <param name="pSampleSize">Number of elements to return</param>
@@ -245,10 +245,13 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 var mGroup = new MapGroup();
                 mGroup.LegendText = frmMain.dbx.DbBaseName;
 
+                Debug.WriteLine("Got here");
+
                 var mAddressUnitFeatures = new AddressUnitFeature(frmMain.dbx);
                 mAddressUnitFeatures.PopulateFromTable();
                 var mAddressUnitLayer = ExtFunctions.GetFeatureLayer(mGroup.Layers, mAddressUnitFeatures, LayerNames.AddressUnitSigns, MapSymbols.PointSymbol(SignColors.AddressUnitSign, 3), pProjection);
                 mAddressUnitLayer.Reproject(pMap.Projection);
+
                 ExtFunctions.AddLabelsForFeatureLayer(mAddressUnitLayer, LayerNames.AddressUnitSigns, "[ADDRESSUNITNR] ([ROADID])", Color.White, "Arial", 10, true);
 
                 var mStreetNameSignFeatures = new StreetNameSignFeature(frmMain.dbx);
@@ -339,7 +342,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Returns a projection info object for the specified EPSG code
+        /// Returns fieldAttributes projection info object for the specified EPSG code
         /// </summary>
         /// <param name="pEPSGCode">EPSG code</param>
         /// <returns>DotSpatial ProjectionInfo object</returns>
@@ -356,7 +359,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Converts a DotSpatial ProjectionInfo object to an OGR SpatialReference object
+        /// Converts fieldAttributes DotSpatial ProjectionInfo object to an OGR SpatialReference object
         /// </summary>
         /// <param name="pProjection">DotSpatial ProjectionInfo</param>
         /// <returns>An OGR SpatialReference</returns>
@@ -406,7 +409,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Add map labels for a feature layer
+        /// Add map labels for fieldAttributes feature layer
         /// </summary>
         /// <param name="pFLyr">The feature layer to add labels to</param>
         /// <param name="pCategoryTitle">The title of the label category (not visible)</param>
@@ -526,7 +529,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return false;
             }
 
-            // Create a datasource
+            // Create fieldAttributes datasource
             DataSource ds = drv.CreateDataSource(pOutputFilename, null);
             if (ds == null)
             {
@@ -534,7 +537,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return false;
             }
 
-            // Create a layer
+            // Create fieldAttributes layer
             OSGeo.OGR.Layer l = ds.CreateLayer("AddressUnits", null, wkbGeometryType.wkbPoint, null);
             if (l == null)
             {
@@ -542,7 +545,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 return false;
             }
 
-            // Create a class to hold address unit data
+            // Create fieldAttributes class to hold address unit data
             AddressUnit mAddressUnits = new AddressUnit();
 
             // Add fields to shapefile
@@ -608,7 +611,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Extracts an X,Y coordinate pair from a data row provided the correct values are present
+        /// Extracts an X,Y coordinate pair from fieldAttributes data row provided the correct values are present
         /// </summary>
         /// <param name="mRow">A data row</param>
         /// <returns>An array of two double precision coordinate values on success or null on missing data</returns>
@@ -697,7 +700,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Exports the selected database to a filegeodatabase
+        /// Exports the selected database to fieldAttributes filegeodatabase
         /// </summary>
         /// <param name="pOnlyApproved"></param>
         /// <returns></returns>
@@ -707,15 +710,15 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             string mSql;
             if (pOnlyApproved == 1)
             {
-                mSql = "SELECT ABBREVIATION, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, APPROVED FROM ADRDISTRICT WHERE APPROVED = 'Y'";
+                mSql = "SELECT OBJECTID, ABBREVIATION, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, APPROVED FROM ADRDISTRICT WHERE APPROVED = 'Y'";
             }
             else
             {
-                mSql = "SELECT ABBREVIATION, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, APPROVED FROM ADRDISTRICT";
+                mSql = "SELECT OBJECTID, ABBREVIATION, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, APPROVED FROM ADRDISTRICT";
             }
 
-            // Setup a dictionary to hold road names
-            var mDistrictNames = new Dictionary<string, DataRow>();
+            // Setup fieldAttributes dictionary to hold road names
+            var mDistrictNames = new Dictionary<int, DataRow>();
 
             // Connect to database and load names
             var mOdbcConn = new OdbcConnection("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=" + pMdbFile + ";Uid=Admin;Pwd=;");
@@ -728,11 +731,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             pPgBar.Value = ctr1;
             foreach (DataRow mRow in mDataTable.Rows)
             {
-                if (mDistrictNames.Keys.Contains(mRow["ABBREVIATION"].ToString()))
+                if (mDistrictNames.Keys.Contains(mRow["OBJECTID"].ToInt()))
                 {
-                    throw new Exception("Key " + mRow["ABBREVIATION"].ToString() + " already exists in districts");
+                    Utilities.LogDebug("Key " + mRow["OBJECTID"].ToInt() + " already exists in districts");
                 }
-                mDistrictNames.Add(mRow["ABBREVIATION"].ToString(), mRow);
+                mDistrictNames.Add(mRow["OBJECTID"].ToInt(), mRow);
                 ctr1++;
                 if (ctr1 % 100 == 0)
                 {
@@ -741,6 +744,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                     Application.DoEvents();
                 }
             }
+
             Debug.WriteLine("Done loading district names");
             Debug.WriteLine(ctr1);
             mOdbcConn.Close();
@@ -763,7 +767,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
             Debug.WriteLine("Loaded layer");
 
             // Create simplified roads
-            var mSimplifiedRoadsFeatureSet = new District();
+            var mDistrict = new District();
 
             int mTotal2 = mLayer.GetFeatureCount(1);
             Debug.WriteLine("Number of features" + mTotal2);
@@ -773,7 +777,6 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             int mFeatureIndex = 0;
             while (null != (mFeature = mLayer.GetNextFeature()))
-            //for (int mFeatureIndex = 0; mFeatureIndex < mTotal2; mFeatureIndex++)
             {
 
                 if (mFeature == null)
@@ -793,9 +796,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
                         IMultiPolygon mPolygon;
 
-                        string mDistrictAbbreviation = mFeature.GetFieldAsString("ABBREVIATION");
+                        int mDistrictObjectId = mFeature.GetFieldAsInteger("OBJECTID");
 
-                        if (!String.IsNullOrEmpty(mDistrictAbbreviation))
+                        if (mDistrictObjectId > 0)
                         {
 
                             var mWkbReader = new WkbReader();
@@ -820,17 +823,18 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                                 mPolygon = mGeom as IMultiPolygon;
                             }
 
-                            if (mDistrictNames.ContainsKey(mDistrictAbbreviation))
+                            if (mDistrictNames.ContainsKey(mDistrictObjectId))
                             {
-                                var mDistrictName = mDistrictNames[mDistrictAbbreviation];
+                                var mDistrictName = mDistrictNames[mDistrictObjectId];
 
-                                var mDistrictId = mDistrictName["ABBREVIATION"].ToString();
+
+                                var mDistrictAbbreviation = mDistrictName["ABBREVIATION"].ToString();
                                 var mNameArabic = mDistrictName["NAMEARABIC"].ToString();
                                 var mNameLatin = mDistrictName["NAMEENGLISH"].ToString();
                                 var mNamePopularArabic = mDistrictName["NAMEPOPULARARABIC"].ToString();
                                 var mNamePopularLatin = mDistrictName["NAMEPOPULARENGLISH"].ToString();
                                 var mApproved = mDistrictName["APPROVED"].ToString();
-                                mSimplifiedRoadsFeatureSet.AddNewRow(mGeom, mDistrictAbbreviation, mNameArabic, mNameLatin, mNamePopularArabic, mNamePopularLatin, mApproved);
+                                mDistrict.AddNewRow(mGeom, mDistrictObjectId, mDistrictAbbreviation, mNameArabic, mNameLatin, mNamePopularArabic, mNamePopularLatin, mApproved);
                             }
                             else
                             {
@@ -859,17 +863,17 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 mFeatureIndex++;
             }
 
-            mSimplifiedRoadsFeatureSet.UpdateExtent();
-            Debug.WriteLine("Done creating simplified roads...");
-            return mSimplifiedRoadsFeatureSet;
+            mDistrict.UpdateExtent();
+            Debug.WriteLine("Done creating districts...");
+            return mDistrict;
         }
 
         /// <summary>
-        /// Exports the selected database to a filegeodatabase
+        /// Exports the selected database to fieldAttributes filegeodatabase
         /// </summary>
         /// <param name="progressBar">A progress bar object</param>
         /// <param name="logFunction">A log function</param>
-        /// <param name="mdbFile">The filename of an addressing database</param>
+        /// <param name="mdbFile">The outputShapefileName of an addressing database</param>
         /// <param name="approvedOnly">1 to include only approved, 0 to include all</param>
         /// <returns>Feature set</returns>
         public static FeatureSet GetRoadFeatureSetFromAdmAdrMdb(ref ToolStripProgressBar progressBar, Action<string, bool> logFunction, string mdbFile, int approvedOnly = 0)
@@ -887,7 +891,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
             logFunction(sqlStatement, true);
 
-            // Setup a dictionary to hold road names
+            // Setup fieldAttributes dictionary to hold road names
             var roadNames = new Dictionary<int, DataRow>();
 
             // Connect to database and load names
@@ -1029,7 +1033,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
                 sql = "SELECT ADRROADID, NAMEENGLISH, NAMEARABIC, NAMEPOPULARENGLISH, NAMEPOPULARARABIC, ROADTYPE, ADRDISTRICTID, APPROVED FROM ADM_ADRROAD ORDER BY ADRROADID";
             }
 
-            // Setup a dictionary to hold road names
+            // Setup fieldAttributes dictionary to hold road names
             var mRoads = new Dictionary<int, DataRow>();
 
             // Connect to database and load names

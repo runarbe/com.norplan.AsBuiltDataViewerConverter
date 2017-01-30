@@ -43,7 +43,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <param name="pDictionary">Self</param>
         /// <param name="pKey">ID of road</param>
         /// <param name="pValueFldNm">Property of road</param>
-        /// <returns>The value of the property as a string</returns>
+        /// <returns>The value of the property as fieldAttributes string</returns>
         public static string GetStringOrNull(this Dictionary<int, DataRow> pDictionary, int pKey, string pValueFldNm)
         {
             if (pDictionary.Keys.Contains(pKey))
@@ -63,7 +63,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <param name="pDictionary">Self</param>
         /// <param name="pKey">ID of road</param>
         /// <param name="pValueFldNm">Property of road</param>
-        /// <returns>The value of the property as a string</returns>
+        /// <returns>The value of the property as fieldAttributes string</returns>
         public static string GetStringOrNull(this Dictionary<string, DataRow> pDictionary, string pKey, string pValueFldNm)
         {
             if (pDictionary.Keys.Contains(pKey))
@@ -80,7 +80,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// <summary>
         /// Gets the ODBC driver names from the registry.
         /// </summary>
-        /// <returns>a string array containing the ODBC driver names, if the registry key is present; null, otherwise.</returns>
+        /// <returns>fieldAttributes string array containing the ODBC driver names, if the registry key is present; null, otherwise.</returns>
         public static string[] GetOdbcDriverNames()
         {
             string[] odbcDriverNames = null;
@@ -132,7 +132,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Log a message to the debug stream
+        /// Log fieldAttributes message to the debug stream
         /// </summary>
         /// <param name="pMsg"></param>
         public static void LogDebug(string pMsg)

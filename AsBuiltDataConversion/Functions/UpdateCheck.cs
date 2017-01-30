@@ -21,7 +21,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         public string UpdateCheckURL { get; set; }
 
         /// <summary>
-        /// A flag determining whether the UpdateCheckURL is valid or not
+        /// A flag determining whether the UpdateCheckURL is isValid or not
         /// </summary>
         public bool IsValid { get; set; }
 
@@ -29,7 +29,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         /// Constructor
         /// </summary>
         /// <param name="updateCheckURL">
-        /// Complete URL to folder containing setup files
+        /// Complete URL to outputFolder containing setup files
         /// and update.php script without trailing slash
         /// </param>
         public UpdateCheck(string updateCheckURL)
@@ -164,7 +164,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
         }
 
         /// <summary>
-        /// Response from update service, contains a SetupFile object
+        /// Response from update service, contains fieldAttributes SetupFile object
         /// </summary>
         public class UpdateResponse
         {

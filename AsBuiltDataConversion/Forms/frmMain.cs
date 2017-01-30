@@ -16,6 +16,12 @@ using DotSpatial.Symbology;
 using norplan.adm.qrlib;
 using DotSpatial.Topology;
 using CsvHelper.Excel;
+using Norplan.Adm.AsBuiltDataConversion.MyAbuDhabi;
+using System.Diagnostics;
+using Norplan.Adm.AsBuiltDataConversion.CSharpFeatureTypes;
+using System.Reflection;
+using OSGeo.OGR;
+using OSGeo.GDAL;
 
 namespace Norplan.Adm.AsBuiltDataConversion
 {
@@ -114,6 +120,9 @@ namespace Norplan.Adm.AsBuiltDataConversion
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            this.Text = String.Format("As-Built Data Viewer and Converter (build: {0} on the {1})",
+                Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                Properties.Resources.BuildDate);
             // Add base layers
             theMap.BackColor = Color.LightBlue;
             ExtFunctions.AddBaseLayers(theMap);
@@ -267,7 +276,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
         {
             if (frmMain.dbx != null)
             {
-                // Get filename
+                // Get outputShapefileName
                 dlgSaveFile.Title = "Please select where to save the GML file";
                 dlgSaveFile.FileName = frmMain.dbx.DbBaseName + ".gml";
                 dlgSaveFile.Filter = "GML file|*.gml";
@@ -536,10 +545,10 @@ namespace Norplan.Adm.AsBuiltDataConversion
         }
 
         /// <summary>
-        /// Returns the selected output filename or null if none specified
+        /// Returns the selected output outputShapefileName or null if none specified
         /// </summary>
         /// <param name="pTitle">Title of dialog box</param>
-        /// <param name="pFilename">Suggested filename</param>
+        /// <param name="pFilename">Suggested outputShapefileName</param>
         /// <param name="pFilter">Filter</param>
         /// <returns></returns>
         private string SelectOutputFilename(string pTitle = "Choose location and filename", string pFilename = "", string pFilter = "All file types|*.*", bool pConfirmOverwrite = true)
@@ -723,8 +732,9 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 mOPFn,
                 mLyr,
                 theMap.Projection,
-                ExtFunctions.GetProjByEPSG(4326));
-
+                ExtFunctions.GetProjByEPSG(4326),
+                false,
+                SignType.addressUnitNumberSign);
         }
 
         private void removeBINGSatelliteImageryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -792,7 +802,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             string mSelectedFolder = dlgSelectFolder.SelectedPath;
             if (mSelectedFolder.EndsWith(".gdb"))
             {
-                Log("Appending to existing ESRI FileGDB");
+                Log(String.Format("Appending to existing ESRI FileGDB ({0})", mSelectedFolder));
             }
             else
             {
@@ -803,6 +813,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
                     mFolder = mSelectedFolder + "\\OnwaniFGDB" + mIdx.ToString("000") + ".gdb";
                     mIdx++;
                 }
+                Log(String.Format("Using ESRI FileGDB ({0})", mFolder));
                 mSelectedFolder = mFolder;
             }
 
@@ -859,14 +870,15 @@ namespace Norplan.Adm.AsBuiltDataConversion
             if (dlgSelectFolder.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             var mTgtFileGDB = dlgSelectFolder.SelectedPath;
 
-            dlgOpenMdbFile.Title = "Please select latest 'adm-adr.mdb' PGeoDB";
+            dlgOpenMdbFile.Title = "Please select latest 'adm-adr.mdb' PGeoDB for road names";
             dlgOpenMdbFile.Filter = "ESRI Personal Geodatabase|*.mdb";
             dlgOpenMdbFile.FileName = "adm-adr.mdb";
             if (dlgOpenMdbFile.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             var mSrcPGeoDB = dlgOpenMdbFile.FileName;
-            //var mSrcPGeoDB = "D:/Dropbox (Personal)/20 - Middle East projects/Abu Dhabi Addressing/Data Model/Database/adm-adr.mdb";
-
+            
             ExtFunctions.CleanFileGDBNames(this, mTgtFileGDB, mSrcPGeoDB, "Address_unit_signs");
+            ExtFunctions.CleanFileGDBNames(this, mTgtFileGDB, mSrcPGeoDB, "Street_name_signs");
+            ExtFunctions.CleanFileGDBNames(this, mTgtFileGDB, mSrcPGeoDB, "Address_guide_sign");
 
             Log("Completed process");
 
@@ -883,7 +895,7 @@ namespace Norplan.Adm.AsBuiltDataConversion
             dlgSaveFile.FileName = "myabudhabi.net.sql";
             if (dlgSaveFile.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
 
-            ExtFunctions.ExportFileGDBToMyAbuDhabiDotNetSQL(this, dlgSelectFolder.SelectedPath, dlgSaveFile.FileName, 25,false);
+            var mExportResult = ExtFunctions.ExportFileGDBToMyAbuDhabiDotNetSQL(this, dlgSelectFolder.SelectedPath, dlgSaveFile.FileName, 25, false);
 
             Log("Completed process");
         }
@@ -899,19 +911,28 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 try
                 {
                     var mDistrictsFeatureSet = ExtFunctions.GetDistrictsFeatureSetFromAdmAdrMdb(ref this.pgBar, dlgOpenMdbFile.FileName, 0);
+                    if (mDistrictsFeatureSet == null)
+                    {
+                        return;
+                    }
                     var mDistrictsLayer = ExtFunctions.GetFeatureLayer(theMap.Layers, mDistrictsFeatureSet, "Districts", MapSymbols.PolygonSymbol(Color.Transparent, Color.Red), KnownCoordinateSystems.Projected.UtmWgs1984.WGS1984UTMZone40N);
-                   
-                    // Exeport districts to shapefile
-                    mDistrictsLayer.DataSet.SaveAs(Application.StartupPath + "/GisData/districts.shp", true);
-                    Properties.Settings.Default.DistrictFilePresent = true;
-                    Properties.Settings.Default.DistrictImportFileDate = DateTime.Now;
+                    
+                    mDistrictsLayer.DataSet.ExportToShapeUsingOgr(DistrictImport.GetShapefileName());
+
                     mDistrictsLayer.Reproject(theMap.Projection);
                     theMap.Refresh();
-                    Log("Operation completed");
+
+
+                    // Set properties
+                    Properties.Settings.Default.DistrictFilePresent = true;
+                    Properties.Settings.Default.DistrictImportFileDate = DateTime.Now;
+
+                    Log("Operation completed, saved imported districts to: " + DistrictImport.GetShapefileName());
                 }
                 catch (Exception ex)
                 {
                     Log("Operation aborted: " + ex.Message);
+                    Log("Look for issues with duplicate district abbreviations and make sure that you have selected an 'adm-adr' ESRI Personal Geodatabase file that contains districts...");
                 }
             }
 
@@ -1081,6 +1102,112 @@ namespace Norplan.Adm.AsBuiltDataConversion
                 dataCleaner.BlankNamesWhereNotApproved();
                 Log("Done");
             }
+        }
+
+        private void exportSelectedDatabasesToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportSelectedAddressUnitLayerToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            Gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8");
+            using (DataSource ds = Ogr.Open(DistrictImport.GetShapefileName(), 0))
+            {
+                using (OSGeo.OGR.Layer l = ds.GetLayerByIndex(0))
+                {
+                    
+                    OSGeo.OGR.Feature f;
+
+                    while (null != (f = l.GetNextFeature()))
+                    {
+                        this.Log(f.GetFieldAsString("NAMEARABIC"));
+                    }
+                }
+            }
+            //var dlgSelectPGeo = new OpenFileDialog
+            //{
+            //    Title = "Please select a Personal Geodatabase",
+            //    Filter = "Microsoft Access database|*.accdb",
+            //    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+            //};
+
+            //var dlgSelectFileGDB = new FolderBrowserDialog
+            //{
+            //    RootFolder = Environment.SpecialFolder.Desktop,
+            //    Description = "Please select an ESRI FileGeodatabasee (a folder with .gdb ending)"
+            //};
+
+            //if (dlgSelectFileGDB.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            //{
+            //    return;
+            //};
+
+            //if (!dlgSelectFileGDB.SelectedPath.EndsWith(".gdb"))
+            //{
+            //    Log("Selected folder does not have the correct *.gdb extension");
+            //    return;
+            //}
+
+            //using (OSGeo.OGR.DataSource districtDataSource = OSGeo.OGR.Ogr.Open(dlgSelectFileGDB.SelectedPath, 0))
+            //{
+            //    if (districtDataSource == null)
+            //    {
+            //        Log("The data source does not exist");
+            //    }
+
+            //    using (OSGeo.OGR.Layer lyr = districtDataSource.GetLayerByName("Street_name_signs"))
+            //    {
+
+            //        if (lyr == null)
+            //        {
+            //            Log("The layer could not be opened");
+            //            return;
+            //        }
+
+            //        OSGeo.OGR.Feature f;
+            //        var districtLayer = new List<OgrFeature>();
+            //        var of = new OgrStreetNameSign();
+            //        while (null != (f = lyr.GetNextFeature()))
+            //        {
+            //            of.PopulateFromOgrFeature(f);
+            //            districtLayer.Add(of);
+            //            Log(of.QR_CODE);
+            //        }
+            //        Log(districtLayer.Count);
+            //    }
+            //}
+
+            //var s = new SignTestTableANS();
+            //Log(s.CreateStatement());
+        }
+
+        private void exportAddressingDistrictsToMyabudhabinetSQLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var exportResult = ExtFunctions.ExportDistrictsToMyAbuDhabiNet();
+                Log(exportResult.GetMessages());
+                if (exportResult.Success == true)
+                {
+                    Log("Operation succeeded");
+                }
+                else
+                {
+                    Log("Operation failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("An error occurred: " + ex.Message);
+                Log("Operation failed");
+            }
+
         }
 
     }

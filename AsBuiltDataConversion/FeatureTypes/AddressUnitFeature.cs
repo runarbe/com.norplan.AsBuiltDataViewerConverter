@@ -36,6 +36,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             this.AddCol("ROADNAME_POP_EN", typeof(string), 200);
             // ROADNAME_POP_AR
             this.AddCol("ROADNAME_POP_AR", typeof(string),200);
+            // ROADNAME DESCRIPTION AR
+            this.AddCol("DESCRIPTION_AR", typeof(string), 255);
+            // ROADNAME DESCRIPTION EN
+            this.AddCol("DESCRIPTION_EN", typeof(string), 255);
             // DISTRICT_EN
             this.AddCol("DISTRICT_EN", typeof(string), 200);
             // DISTRICT_AR
@@ -64,12 +68,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
                     mFeature.DataRow["ADDRESSUNITID"] = mFeature.Fid;
                     mFeature.DataRow["ROADID"] = mRow["road_id"].ToString();
                     mFeature.DataRow["ADDRESSUNITNR"] = mRow["addressUnitNumber"].ToString();
-                    mFeature.DataRow["ROADNAME_EN"] = mRow["NAMEENGLISH"].ToString();
-                    mFeature.DataRow["ROADNAME_AR"] = mRow["NAMEARABIC"].ToString();
+                    mFeature.DataRow["ROADNAME_EN"] = "";
+                    mFeature.DataRow["ROADNAME_AR"] = "";
                     mFeature.DataRow["ROADNAME_POP_EN"] = "";
                     mFeature.DataRow["ROADNAME_POP_AR"] = "";
-                    mFeature.DataRow["DISTRICT_EN"] = mRow["DISTRICT_EN"].ToString();
-                    mFeature.DataRow["DISTRICT_AR"] = mRow["DISTRICT_AR"].ToString();
                     mFeature.DataRow["DISTRICTID"] = mRow["district_id"].ToString();
                     mFeature.DataRow["MUNICIPALITY_EN"] = Utilities.LABEL_ABUDHABI_EN;
                     mFeature.DataRow["MUNICIPALITY_AR"] = Utilities.LABEL_ABUDHABI_AR;

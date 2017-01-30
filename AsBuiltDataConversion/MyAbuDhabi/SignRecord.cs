@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
+namespace Norplan.Adm.AsBuiltDataConversion.MyAbuDhabi
 {
-    class MyAbuDhabiDotNetRecord
+    public class SignRecord
     {
         public List<string> StatementBuffer = new List<string>();
 

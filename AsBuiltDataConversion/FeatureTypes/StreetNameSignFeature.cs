@@ -24,10 +24,20 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             AddCol("SIGNTYPE", typeof(string), 50);
             AddCol("AUNRANGE_P1", typeof(string), 200);
             AddCol("ROADID_P1", typeof(int));
+            AddCol("ROADNAME_EN_P1", typeof(string), 100);
+            AddCol("ROADNAME_AR_P1", typeof(string), 100);
             AddCol("DISTRICTID_P1", typeof(string), 100);
+            AddCol("CLEARANCE_P1", typeof(double), 100);
+            AddCol("SIZE_P1", typeof(string), 100);
             AddCol("AUNRANGE_P2", typeof(string), 200);
             AddCol("ROADID_P2", typeof(int));
+            AddCol("ROADNAME_EN_P2", typeof(string), 100);
+            AddCol("ROADNAME_AR_P2", typeof(string), 100);
             AddCol("DISTRICTID_P2", typeof(string), 100);
+            AddCol("CLEARANCE_P2", typeof(double), 100);
+            AddCol("SIZE_P2", typeof(string), 100);
+            AddCol("DISTRICT_EN", typeof(string), 100);
+            AddCol("DISTRICT_AR", typeof(string), 100);
         }
 
         public FeatureSet PopulateFromTable()
@@ -53,9 +63,15 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
                     mF["AUNRANGE_P1"] = mRow["addressUnitRange_p1"];
                     mF["ROADID_P1"] = mRow["road_id_p1"];
                     mF["DISTRICTID_P1"] = mRow["district_id_p1"];
+                    mF["CLEARANCE_P1"] = mRow["signpanelgroundclearance_p1"];
+                    mF["SIZE_P1"] = mRow["signPanelDimensions_p1"];
                     mF["AUNRANGE_P2"] = mRow["addressUnitRange_p2"];
-                    mF["ROADID_P2"] = mRow["road_id_p2"];
+                    mF["ROADID_P2"] = mRow["road_id_p2"];                    
                     mF["DISTRICTID_P2"] = mRow["district_id_p2"];
+                    mF["CLEARANCE_P2"] = mRow["signpanelgroundclearance_p2"];
+                    mF["SIZE_P2"] = mRow["signPanelDimensions_p2"];                    
+                    mF["DISTRICT_EN"] = "";
+                    mF["DISTRICT_AR"] = "";
                     mF.EndEdit();
                 }
 

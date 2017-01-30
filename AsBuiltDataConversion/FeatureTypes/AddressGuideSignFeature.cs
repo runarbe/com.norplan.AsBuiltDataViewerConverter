@@ -24,7 +24,11 @@ namespace Norplan.Adm.AsBuiltDataConversion.FeatureTypes
             AddCol("SIGNTYPE", typeof(string), 50);
             AddCol("AUNRANGE", typeof(string), 200);
             AddCol("ROADID", typeof(int));
+            AddCol("ROADNAME_EN", typeof(string), 100);
+            AddCol("ROADNAME_AR", typeof(string), 100);
             AddCol("DISTRICTID", typeof(string), 100);
+            AddCol("DISTRICT_EN", typeof(string), 100);
+            AddCol("DISTRICT_AR", typeof(string), 100);
         }
 
 

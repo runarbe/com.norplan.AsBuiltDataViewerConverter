@@ -7,10 +7,10 @@ namespace Norplan.Adm.AsBuiltDataConversion.DataTypes
 {
     public class SignType {
 
-        public static String addressUnitNumberSign = "Address unit number sign";
-        public static String addressGuideSign = "Address guide sign";
-        public static String streetNameSign = "Street name sign";
-        public static String noSignInformationAvailable = "No information available";
+        public const String addressUnitNumberSign = "Address unit number sign";
+        public const String addressGuideSign = "Address guide sign";
+        public const String streetNameSign = "Street name sign";
+        public const String noSignInformationAvailable = "No information available";
     }
 
 }
