@@ -174,7 +174,7 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
                     mRecords.AddToBuffer(
                         mFeat.GetFieldAsString("QR_CODE"),
-                        "",
+                        "NULL",
                         mFeat.GetFieldAsString("ROADNAME_EN_P1").MySQLEscape() + "/" + mFeat.GetFieldAsString("ROADNAME_EN_P2").MySQLEscape(),
                         mFeat.GetFieldAsString("ROADNAME_AR_P1").MySQLEscape() + "/" + mFeat.GetFieldAsString("ROADNAME_AR_P2").MySQLEscape(),
                         mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMELATIN").MySQLEscape() : "",
@@ -250,9 +250,9 @@ namespace Norplan.Adm.AsBuiltDataConversion.Functions
 
                     mRecords.AddToBuffer(
                         mFeat.GetFieldAsString("QR_CODE"),
-                        "",
-                        mFeat.GetFieldAsString("ROADNAME_EN"),
-                        mFeat.GetFieldAsString("ROADNAME_AR"),
+                        "NULL",
+                        mFeat.GetFieldAsString("ROADNAME_EN").MySQLEscape(),
+                        mFeat.GetFieldAsString("ROADNAME_AR").MySQLEscape(),
                         mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMELATIN").MySQLEscape() : null,
                         mDistrictInfo != null ? mDistrictInfo.GetFieldAsString("NAMEARABIC").MySQLEscape() : null,
                         mEnvelope.MinX.ToString(mNumFormat),
